@@ -17,6 +17,8 @@
     --shadow:0 1px 2px rgba(31,42,48,.04),0 8px 24px rgba(31,42,48,.06);
     --shadow-hover:0 2px 4px rgba(31,42,48,.06),0 16px 40px rgba(31,42,48,.10);
     --purple:#7036e3;
+    --green-mock:#1a7a5e;
+    --green-mock-soft:#2aab84;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -38,6 +40,7 @@
   .nav a:hover{color:var(--accent);}
   .nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
   .nav a.vocab-nav.active{color:var(--purple);border-bottom-color:var(--purple);}
+  .nav a.mock-nav.active{color:var(--green-mock);border-bottom-color:var(--green-mock);}
 
   /* HERO */
   .hero{max-width:1180px;margin:0 auto;padding:6rem 2rem 5rem;display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:end;border-bottom:1px solid var(--line);}
@@ -51,6 +54,7 @@
   .tab-btn:hover{color:var(--ink-soft);}
   .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
   .tab-btn.vocab-tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+  .tab-btn.mock-tab.active{color:var(--green-mock);border-bottom-color:var(--green-mock);}
 
   /* SECTIONS */
   .materials-section{max-width:1180px;margin:0 auto;padding:4rem 2rem 6rem;display:none;}
@@ -59,6 +63,7 @@
   .section-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:500;letter-spacing:-.005em;}
   .section-title em{font-style:italic;color:var(--accent);}
   .section-title.vocab-title em{color:var(--purple);}
+  .section-title.mock-title em{color:var(--green-mock);}
   .section-count{font-family:'Inter',sans-serif;font-size:.85rem;color:var(--ink-mute);letter-spacing:.05em;}
 
   /* ── 오늘의 퀴즈 배너 ── */
@@ -269,6 +274,79 @@
   .tts-playing{background:var(--purple) !important;color:#fff !important;animation:pulse .6s ease infinite alternate;}
   @keyframes pulse{from{opacity:.7}to{opacity:1}}
 
+  /* ── 모의고사 Day 폴더 카드 ── */
+  .mock-stat strong{color:var(--green-mock);font-weight:600;}
+  .mock-day-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;}
+
+  .mock-folder{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:.85rem .8rem;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:.35rem;transition:transform .3s,box-shadow .3s,border-color .3s;position:relative;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;user-select:none;animation:fadeUp .5s ease both;}
+  .mock-folder::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--green-mock);transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+  .mock-folder:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:rgba(26,122,94,.35);}
+  .mock-folder:hover::before{transform:scaleX(1);}
+  .mock-folder-num{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.75rem;color:var(--green-mock);letter-spacing:.05em;}
+  .mock-folder-title{font-family:'Noto Serif KR',serif;font-size:.85rem;font-weight:600;line-height:1.4;color:var(--ink);}
+  .mock-folder-desc{font-size:.72rem;color:var(--ink-soft);line-height:1.5;flex-grow:1;}
+  .mock-folder-footer{display:flex;justify-content:space-between;align-items:center;margin-top:.25rem;padding-top:.6rem;border-top:1px dashed var(--line);}
+  .mock-folder-tag{font-family:'Inter',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-mute);}
+  .mock-folder-arrow{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--green-mock);transition:transform .3s;}
+  .mock-folder:hover .mock-folder-arrow{transform:translateX(4px);}
+
+  .mock-detail{display:none;margin-top:1.5rem;padding:1.5rem;background:rgba(26,122,94,.02);border:1px solid rgba(26,122,94,.15);border-radius:6px;animation:fadeUp .3s ease both;}
+  .mock-detail.open{display:block;}
+  .mock-detail-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid rgba(26,122,94,.15);}
+  .mock-detail-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;color:var(--ink);}
+  .mock-detail-actions{display:flex;gap:.6rem;align-items:center;}
+  .mock-flip-btn{font-family:'Inter',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:.4rem .9rem;border-radius:20px;border:1.5px solid rgba(26,122,94,.35);background:rgba(26,122,94,.04);color:var(--green-mock);cursor:pointer;transition:all .2s;}
+  .mock-flip-btn:hover{background:rgba(26,122,94,.12);border-color:var(--green-mock);}
+  .mock-close-btn{font-family:'Inter',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:.4rem .9rem;border-radius:20px;border:1.5px solid var(--line);background:transparent;color:var(--ink-mute);cursor:pointer;transition:all .2s;}
+  .mock-close-btn:hover{border-color:var(--ink-mute);color:var(--ink);}
+
+  .mock-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.65rem;}
+  .mcard{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.85rem .8rem .85rem .8rem;padding-right:2.2rem;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(31,42,48,.04);user-select:none;-webkit-user-select:none;}
+  .mcard::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--green-mock);transform:scaleY(0);transform-origin:top;transition:transform .3s;}
+  .mcard:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(26,122,94,.12);border-color:rgba(26,122,94,.3);}
+  .mcard:hover::before{transform:scaleY(1);}
+  .mcard.open{background:rgba(26,122,94,.03);border-color:rgba(26,122,94,.22);}
+  .mcard.open::before{transform:scaleY(1);}
+  .mcard-en{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+  .mcard-ko{font-size:.74rem;color:var(--ink-soft);line-height:1.5;margin-top:.28rem;display:none;}
+  .mcard-hint{font-size:.58rem;color:var(--ink-mute);margin-top:.22rem;}
+  .mcard.open .mcard-ko{display:block;}
+  .mcard.open .mcard-hint{display:none;}
+  .mcard-tts{position:absolute;top:.5rem;right:.5rem;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(26,122,94,.08);color:var(--green-mock);cursor:pointer;font-size:.7rem;transition:all .15s;z-index:2;}
+  .mcard-tts:hover{background:rgba(26,122,94,.18);transform:scale(1.08);}
+  .mcard-tts:active{transform:scale(.92);}
+
+  .quiz-banner.mock-banner{border-color:rgba(26,122,94,.25);background:var(--card);box-shadow:0 2px 12px rgba(26,122,94,.08);}
+  .quiz-banner.mock-banner::before{background:var(--green-mock);}
+  .quiz-banner.mock-banner .quiz-banner-label{color:var(--green-mock);}
+  .quiz-banner.mock-banner .quiz-banner-btn{background:var(--green-mock);}
+  .quiz-banner.mock-banner.overdue{border-color:rgba(217,64,64,.35);background:#fff5f5;}
+  .quiz-banner.mock-banner.overdue::before{background:#d94040;}
+  .quiz-banner.mock-banner.overdue .quiz-banner-label{color:#d94040;}
+  .quiz-banner.mock-banner.overdue .quiz-banner-btn{background:#d94040;}
+
+  .qz-card-line.mock{background:linear-gradient(90deg,var(--green-mock) 0%,var(--green-mock-soft) 100%);}
+  .qz-pill.mock-pill{background:#e6f7f3;color:var(--green-mock);border:1px solid #b3dfd4;}
+  .qz-start-btn.mock-start{background:var(--green-mock);box-shadow:0 4px 16px rgba(26,122,94,.25);}
+  .qz-submit-btn.mock-submit{background:var(--green-mock);box-shadow:0 4px 16px rgba(26,122,94,.25);}
+  .qz-name.mock-name{color:var(--green-mock) !important;}
+
+  @media(max-width:768px){
+    .mock-day-grid{grid-template-columns:repeat(2,1fr) !important;gap:.55rem;}
+    .mock-folder{padding:.75rem .65rem;}
+    .mock-folder-title{font-size:.78rem;}
+    .mock-folder-desc{font-size:.66rem;}
+    .mock-cards{grid-template-columns:repeat(2,1fr);gap:.5rem;}
+    .mock-detail{padding:1rem .75rem;}
+    .mock-detail-header{flex-direction:column;align-items:flex-start;gap:.5rem;}
+  }
+  @media(max-width:420px){
+    .mock-day-grid{gap:.45rem;}
+    .mock-folder{padding:.65rem .55rem;}
+    .mock-cards{grid-template-columns:repeat(2,1fr);gap:.45rem;}
+    .mcard{padding:.65rem .55rem;}
+  }
+
   /* 로딩 */
   .loading-box{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:4rem 2rem;color:var(--ink-mute);font-family:'Inter',sans-serif;font-size:.85rem;}
   .spinner{width:30px;height:30px;border:2.5px solid var(--line);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;}
@@ -316,8 +394,9 @@
   <div class="header-inner">
     <a href="#" class="logo">BAROG English</a>
     <nav class="nav">
-      <a onclick="switchTab('wrong')" id="nav-wrong" class="active">오답단어</a>
-      <a onclick="switchTab('vocab')" id="nav-vocab" class="vocab-nav">진도단어</a>
+      <a onclick="switchTab('wrong')" id="nav-wrong" class="active">오답</a>
+      <a onclick="switchTab('vocab')" id="nav-vocab" class="vocab-nav">진도</a>
+      <a onclick="switchTab('mock')"  id="nav-mock"  class="mock-nav">모의고사</a>
     </nav>
   </div>
 </header>
@@ -330,8 +409,9 @@
 </section>
 
 <div class="tab-bar">
-  <button class="tab-btn active"   id="tab-wrong" onclick="switchTab('wrong')">오답단어</button>
-  <button class="tab-btn vocab-tab" id="tab-vocab" onclick="switchTab('vocab')">진도단어</button>
+  <button class="tab-btn active"   id="tab-wrong" onclick="switchTab('wrong')">오답</button>
+  <button class="tab-btn vocab-tab" id="tab-vocab" onclick="switchTab('vocab')">진도</button>
+  <button class="tab-btn mock-tab"  id="tab-mock"  onclick="switchTab('mock')">모의고사</button>
 </div>
 
 <!-- ★ 오답단어 — wrong-words.html 실시간 연동 -->
@@ -391,6 +471,45 @@
   </div>
 </main>
 
+<!-- ★ 모의고사 — MOCK_CSV 시트에서 자동 로딩 -->
+<main class="materials-section" id="section-mock">
+  <div class="section-header">
+    <h2 class="section-title mock-title">모의고사 <em></em></h2>
+    <div class="section-count" id="count-mock">불러오는 중...</div>
+  </div>
+  <div id="mock-banner-container"></div>
+
+  <!-- 모의고사 퀴즈 풀스크린 -->
+  <div class="qz-overlay" id="mock-qz-overlay" style="display:none">
+    <div class="qz-header">
+      <div class="qz-header-left">
+        <div class="qz-name mock-name">바로그영어 · 모의고사</div>
+        <div class="qz-title" id="mock-qz-title">객관식 퀴즈</div>
+      </div>
+      <div class="qz-header-right">
+        <span class="qz-pill mock-pill" id="mock-qz-pill">객관식</span>
+        <div class="qz-idx"><span id="mock-qz-cur">0</span><span> / <span id="mock-qz-tot">0</span></span></div>
+      </div>
+    </div>
+    <div class="qz-prog"><div class="qz-dots" id="mock-qz-dots"></div></div>
+    <div class="qz-viewport" id="mock-qz-viewport">
+      <div class="qz-ind qz-ind-prev" id="mock-qz-ind-prev">← 이전</div>
+      <div class="qz-ind qz-ind-next" id="mock-qz-ind-next">다음 →</div>
+    </div>
+    <div class="qz-close-bar">
+      <button class="qz-close-btn" onclick="closeMockQuiz()">✕ 퀴즈 닫기</button>
+    </div>
+  </div>
+
+  <div class="vocab-meta-bar" id="mock-meta" style="display:none">
+    <span class="vocab-stat mock-stat">단어 <strong id="mock-total">0</strong>개</span>
+    <span class="vocab-stat mock-stat">· 세트 <strong id="mock-sets">0</strong>개</span>
+  </div>
+  <div id="mock-content">
+    <div class="loading-box"><div class="spinner" style="border-top-color:var(--green-mock)"></div><span>단어 불러오는 중...</span></div>
+  </div>
+</main>
+
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-text">Barog English · <em>Crafted with care for our students</em></div>
@@ -399,21 +518,29 @@
 
 <script>
 /* ============================================================
-   ★ 진도단어 구글 시트 — 웹에 게시 CSV URL
-   ============================================================ */
-const VOCAB_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=792901992';
+   ★ 학생별 설정 — 이 4줄만 수정하면 됩니다
+   ============================================================
+   STUDENT_NAME : 학생 이름 (스케줄 탭의 B열과 정확히 일치)
+   VOCAB_CSV    : 진도단어 시트 CSV URL (해당 학생의 학년·반에 맞는 gid)
+   MOCK_CSV     : 모의고사 시트 CSV URL (해당 학생의 학년·학교에 맞는 gid)
+   ─ 학년·학교별로 구글 시트 탭을 따로 만들고, 그 탭의 gid만 바꿔주세요
+   ─ 모의고사가 없는 학생이면 MOCK_CSV = '' 로 두면 탭이 자동 안내 메시지 표시 */
+const STUDENT_NAME = '박수빈';
+const VOCAB_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=1617084488';
+const MOCK_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=222284112';
 
 /* ============================================================
    탭 전환
    ============================================================ */
 function switchTab(t) {
-  ['wrong','vocab'].forEach(id => {
+  ['wrong','vocab','mock'].forEach(id => {
     document.getElementById('section-'+id).classList.toggle('visible', id===t);
     document.getElementById('tab-'+id).classList.toggle('active', id===t);
     const n = document.getElementById('nav-'+id);
     if(n) n.classList.toggle('active', id===t);
   });
   if(t==='vocab' && !vocabLoaded) loadVocab();
+  if(t==='mock'  && !mockTabLoaded) loadMockTab();
 }
 
 /* ============================================================
@@ -663,13 +790,8 @@ function ttsAutoPlay(word, btn) {
    ★ 오늘의 퀴즈 — 스케줄 시트에서 날짜+학생명 → Day 자동 로딩
    ============================================================ */
 
-/* ★ 학생별로 이 줄들만 수정
-   STUDENT_NAME : 학생 이름 (스케줄 탭의 B열과 정확히 일치해야 함)
-   SCHEDULE_CSV : 스케줄 탭 CSV URL (모든 학생 공통 gid)
-   MOCK_CSV     : 모의고사/특강 단어 시트 CSV URL (없으면 빈 문자열 '') */
-const STUDENT_NAME = '박수빈';
+/* ★ 스케줄 시트 — 모든 학생 공통 gid (수정 불필요) */
 const SCHEDULE_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=414941877';
-const MOCK_CSV     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?gid=1027447664&single=true&output=csv'
 
 /* ★ Apps Script 웹앱 URL — scan-ocr 시트 Apps Script 배포 URL */
 const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbx5Y3daCCYcLP5WXsusQtrQmIpHrb1t7DyNqbIGRNYGDvYv74ZZ4c9tY_iATFX2krDHHA/exec';
@@ -835,6 +957,7 @@ async function loadQuizConfig() {
         if((cols[1] || '') !== STUDENT_NAME) continue;
         const dayVal = cols[2] || '';
         if(!dayVal) continue;
+        if(isMockDay(dayVal)) continue; // ★ 모의고사 Day는 진도단어 탭에서 제외 (모의고사 탭에서만 표시)
         const cntRaw = parseInt(cols[3] || '');
         const cntVal = isNaN(cntRaw) ? null : cntRaw;
         scheduleRows.push({ dateStr, day: dayVal, count: cntVal });
@@ -844,9 +967,7 @@ async function loadQuizConfig() {
 
   if(scheduleRows.length === 0) return; // 보여줄 게 없으면 종료
 
-  // 2-a. 모의고사 Day가 하나라도 있으면 모의고사 단어 사전 로딩
-  const hasMock = scheduleRows.some(r => isMockDay(r.day));
-  if(hasMock) await loadMockWords();
+  // 2-a. (제거됨) 모의고사 Day는 진도단어 탭에서 더 이상 처리하지 않음 — 모의고사 탭이 담당
 
   // 2. 제출 기록 조회 (로컬 + 서버)
   const localMap     = getLocalSubmitted();
@@ -1289,6 +1410,540 @@ function qzInitSwipe(){
     vp.addEventListener('pointermove',e=>{if(e.pointerId!==pid)return;move(e.clientX,e.clientY,e);},{capture:true});
     vp.addEventListener('pointerup',e=>{if(e.pointerId!==pid)return;pid=null;end(e.clientX);},{capture:true});
     vp.addEventListener('pointercancel',e=>{if(e.pointerId!==pid)return;pid=null;if(qzCardEl)qzCardEl.style.transform='';locked=null;tracking=false;},{capture:true});
+  } else {
+    vp.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;start(e.touches[0].clientX,e.touches[0].clientY);},{passive:true,capture:true});
+    vp.addEventListener('touchmove',e=>{if(!tracking||e.touches.length!==1)return;move(e.touches[0].clientX,e.touches[0].clientY,e);},{passive:false,capture:true});
+    vp.addEventListener('touchend',e=>{if(!e.changedTouches.length)return;end(e.changedTouches[0].clientX);},{passive:true,capture:true});
+  }
+}
+
+/* ============================================================
+   ★ 모의고사 탭 — 독립 엔진 (MOCK_CSV 시트만으로 동작)
+   ============================================================ */
+let mockTabLoaded = false;
+let mockTabWords  = [];
+
+async function loadMockTab() {
+  mockTabLoaded = true;
+  if(!MOCK_CSV) {
+    document.getElementById('mock-content').innerHTML =
+      `<div class="loading-box" style="color:var(--ink-mute);text-align:center">
+        <span style="font-size:2rem">📋</span>
+        <span>모의고사 시트가 아직 등록되지 않았어요.<br>
+        <span style="font-size:.78rem">상단의 MOCK_CSV에 구글 시트 URL을 입력해 주세요.</span></span>
+      </div>`;
+    document.getElementById('count-mock').textContent = '미등록';
+    return;
+  }
+  await loadMockWords();
+  if(!mockWords.length) {
+    document.getElementById('mock-content').innerHTML =
+      `<div class="loading-box" style="color:#d94040">⚠️ 모의고사 단어를 불러오지 못했어요.<br><span style="font-size:.8rem;color:var(--ink-mute)">MOCK_CSV URL을 확인해 주세요.</span></div>`;
+    document.getElementById('count-mock').textContent = '로딩 실패';
+    return;
+  }
+  mockTabWords = mockWords;
+  renderMockVocab(mockTabWords);
+  loadMockQuizBanners();
+}
+
+function renderMockVocab(words) {
+  const groups = {};
+  words.forEach(w => { const d = w.day || '기타'; if(!groups[d]) groups[d]=[]; groups[d].push(w); });
+  const days = Object.keys(groups);
+
+  document.getElementById('count-mock').textContent = `전체 ${words.length}개 단어`;
+  document.getElementById('mock-total').textContent = words.length;
+  document.getElementById('mock-sets').textContent  = days.length;
+  document.getElementById('mock-meta').style.display = 'flex';
+
+  const box = document.getElementById('mock-content');
+  box.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'mock-day-grid';
+
+  days.forEach((day, i) => {
+    const wordCount = groups[day].length;
+    const folder = document.createElement('div');
+    folder.className = 'mock-folder';
+    folder.style.animationDelay = `${0.04*i}s`;
+    folder.innerHTML = `
+      <div class="mock-folder-num">No. ${String(i+1).padStart(2,'0')}</div>
+      <div class="mock-folder-title">${esc(day)}</div>
+      <div class="mock-folder-desc">${wordCount}개 단어</div>
+      <div class="mock-folder-footer">
+        <span class="mock-folder-tag">모의고사</span>
+        <span class="mock-folder-arrow">→</span>
+      </div>`;
+
+    const detail = document.createElement('div');
+    detail.className = 'mock-detail';
+    detail.id = `mock-detail-${i}`;
+    detail.innerHTML = `
+      <div class="mock-detail-header">
+        <div class="mock-detail-title">${esc(day)} <span style="font-size:.85rem;font-weight:400;color:var(--ink-mute)">${wordCount}개</span></div>
+        <div class="mock-detail-actions">
+          <button class="mock-flip-btn" onclick="flipMockDay(${i})">전체 뒤집기</button>
+          <button class="mock-close-btn" onclick="closeMockDay(${i})">닫기 ✕</button>
+        </div>
+      </div>
+      <div class="mock-cards" id="mock-cards-${i}"></div>`;
+
+    const cardsWrap = detail.querySelector(`#mock-cards-${i}`);
+    groups[day].forEach(w => {
+      const c = document.createElement('div');
+      c.className = 'mcard';
+      c.innerHTML = `<div class="mcard-tts" title="발음 듣기">🔊</div>
+        <div class="mcard-en">${esc(w.word)}</div>
+        <div class="mcard-ko">${esc(w.meaning)}</div>
+        <div class="mcard-hint">탭해서 뜻 보기</div>`;
+      c.addEventListener('click', (e) => {
+        if(e.target.closest('.mcard-tts')) return;
+        c.classList.toggle('open');
+        if(c.classList.contains('open')) ttsPlay(w.word, c.querySelector('.mcard-tts'));
+      });
+      const ttsBtn = c.querySelector('.mcard-tts');
+      ttsBtn.addEventListener('click', (e) => { e.stopPropagation(); ttsPlay(w.word, ttsBtn); });
+      cardsWrap.appendChild(c);
+    });
+
+    folder.addEventListener('click', () => toggleMockDay(i, folder, detail));
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'grid-column:1/-1;';
+    wrap.appendChild(detail);
+    grid.appendChild(folder);
+    folder._detailWrap = wrap;
+    folder._detail = detail;
+  });
+
+  box.appendChild(grid);
+}
+
+function toggleMockDay(i, folder, detail) {
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.mock-detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.mock-folder').forEach(f => { f.style.borderColor=''; f.style.background=''; });
+  if(!isOpen) {
+    detail.classList.add('open');
+    folder.insertAdjacentElement('afterend', folder._detailWrap);
+    folder.style.borderColor = 'rgba(26,122,94,.4)';
+    folder.style.background  = 'rgba(26,122,94,.03)';
+    detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+function closeMockDay(i) {
+  const detail = document.getElementById(`mock-detail-${i}`);
+  if(detail) {
+    detail.classList.remove('open');
+    if(detail.parentElement && detail.parentElement.style.gridColumn) detail.parentElement.remove();
+  }
+  document.querySelectorAll('.mock-folder').forEach(f => { f.style.borderColor=''; f.style.background=''; });
+}
+function flipMockDay(i) {
+  const cards = document.querySelectorAll(`#mock-cards-${i} .mcard`);
+  const anyOpen = Array.from(cards).some(c => c.classList.contains('open'));
+  cards.forEach(c => c.classList.toggle('open', !anyOpen));
+  const btn = document.querySelector(`#mock-detail-${i} .mock-flip-btn`);
+  if(btn) btn.textContent = anyOpen ? '전체 뒤집기' : '전체 닫기';
+}
+
+/* ── 모의고사 퀴즈 배너 ── */
+let mockQuizList    = [];
+let currentMockQuiz = null;
+let mockQzConfig    = { day: null, count: null };
+
+async function loadMockQuizBanners() {
+  const container = document.getElementById('mock-banner-container');
+  container.innerHTML = '';
+  const targetDates = [todayStr(), daysAgo(1), daysAgo(2), daysAgo(3), daysAgo(4), daysAgo(5), daysAgo(6)];
+  let scheduleRows = [];
+  try {
+    const res = await fetch(SCHEDULE_CSV + '&t=' + Date.now());
+    if(res.ok) {
+      const text = await res.text();
+      const lines = text.trim().split('\n').map(l => l.replace(/\r$/, ''));
+      const isDateLine = /\d{4}\s*[년\-./]/.test(lines[0]);
+      const startRow = isDateLine ? 0 : 1;
+      for(let i = startRow; i < lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.trim());
+        const dateStr = normScheduleDate(cols[0] || '');
+        if(!dateStr) continue;
+        if(!targetDates.includes(dateStr)) continue;
+        if((cols[1] || '') !== STUDENT_NAME) continue;
+        const dayVal = (cols[2] || '');
+        if(!dayVal || !isMockDay(dayVal)) continue;
+        const cntRaw = parseInt(cols[3] || '');
+        const cntVal = isNaN(cntRaw) ? null : cntRaw;
+        scheduleRows.push({ dateStr, day: dayVal, count: cntVal });
+      }
+    }
+  } catch(e) {}
+  if(!scheduleRows.length) return;
+
+  const localMap   = getLocalSubmitted();
+  const serverList = await fetchServerSubmitted();
+  const isSubmitted = (dateStr, day) =>
+    localMap[`${dateStr}_${day}`] === true || serverList.includes(day);
+
+  const today = todayStr();
+  mockQuizList = scheduleRows
+    .filter(r => !isSubmitted(r.dateStr, r.day))
+    .map(r => ({ ...r, overdue: r.dateStr !== today }))
+    .sort((a, b) => {
+      if(a.dateStr === today && b.dateStr !== today) return -1;
+      if(b.dateStr === today && a.dateStr !== today) return  1;
+      return b.dateStr.localeCompare(a.dateStr);
+    });
+  renderMockQuizBanners();
+}
+
+function renderMockQuizBanners() {
+  const container = document.getElementById('mock-banner-container');
+  container.innerHTML = '';
+  mockQuizList.forEach((q, idx) => {
+    const banner = document.createElement('div');
+    banner.className = 'quiz-banner mock-banner' + (q.overdue ? ' overdue' : '');
+    const left = document.createElement('div');
+    left.className = 'quiz-banner-left';
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'quiz-banner-label';
+    if(q.overdue) {
+      labelEl.textContent = '밀린 모의고사 ';
+      const tag = document.createElement('span');
+      tag.className = 'quiz-banner-overdue-tag';
+      tag.textContent = `${fmtMMDD(q.dateStr)} (${getDow(q.dateStr)})`;
+      labelEl.appendChild(tag);
+    } else {
+      labelEl.textContent = `오늘의 모의고사 · ${fmtMMDD(q.dateStr)} (${getDow(q.dateStr)})`;
+    }
+
+    const dayEl = document.createElement('div');
+    dayEl.className = 'quiz-banner-day';
+    dayEl.textContent = q.day;
+
+    const subEl = document.createElement('div');
+    subEl.className = 'quiz-banner-sub';
+    subEl.textContent = q.count === null ? '객관식 · 전체 문제' : `객관식 · ${q.count}문제`;
+
+    left.appendChild(labelEl);
+    left.appendChild(dayEl);
+    left.appendChild(subEl);
+
+    const btnEl = document.createElement('button');
+    btnEl.className = 'quiz-banner-btn';
+    btnEl.type = 'button';
+    btnEl.textContent = q.overdue ? '지금 풀기 →' : '시작하기 →';
+    btnEl.addEventListener('click', () => startMockQuizByIdx(idx));
+
+    banner.appendChild(left);
+    banner.appendChild(btnEl);
+    container.appendChild(banner);
+  });
+}
+
+/* ── 모의고사 퀴즈 엔진 ── */
+let mqStage='intro', mqQueue=[], mqPos=0, mqAnswered=false, mqWrong=[], mqCardEl=null, mqAnim=false;
+let mqOriginalTotal=0, mqStartTime=null;
+let _mqSwipeInit=false;
+
+function startMockQuizByIdx(idx) {
+  currentMockQuiz = mockQuizList[idx];
+  if(!currentMockQuiz) return;
+  mockQzConfig = { day: currentMockQuiz.day, count: currentMockQuiz.count };
+  startMockQuiz();
+}
+
+function startMockQuiz() {
+  const pool = mockTabWords.length ? mockTabWords : mockWords;
+  const dayWords = pool.filter(w => w.day === mockQzConfig.day);
+  if(!dayWords.length) {
+    alert(`"${mockQzConfig.day}" 단어가 없어요.\n모의고사 시트(MOCK_CSV)에 해당 Day명이 있는지 확인해 주세요.`);
+    return;
+  }
+  const count    = mockQzConfig.count === null ? dayWords.length : mockQzConfig.count;
+  const selected = qzShuffle([...dayWords]).slice(0, count);
+  mqQueue   = selected.map(w => ({...w, _opts: qzBuildOpts(w, pool), _result: null, _picked: null}));
+  mqPos=0; mqAnswered=false; mqWrong=[];
+  mqStage='mc';
+  mqOriginalTotal = selected.length;
+  mqStartTime = Date.now();
+  document.getElementById('mock-qz-title').textContent = `${mockQzConfig.day} · 객관식`;
+  document.getElementById('mock-qz-overlay').style.display = 'flex';
+  history.pushState({ mockQuiz: true }, '', location.href);
+  mqUpdatePill();
+  mqBuildDots();
+  mqRenderQ(1);
+  mqInitSwipe();
+}
+
+function closeMockQuiz(fromPopState) {
+  document.getElementById('mock-qz-overlay').style.display = 'none';
+  if(_audio) { try{_audio.pause();}catch(e){} _audio=null; }
+  if(!fromPopState && history.state && history.state.mockQuiz) history.back();
+}
+window.addEventListener('popstate', function(e) {
+  const ov = document.getElementById('mock-qz-overlay');
+  if(ov && ov.style.display === 'flex') closeMockQuiz(true);
+});
+
+function mqUpdatePill() {
+  const p = document.getElementById('mock-qz-pill');
+  if(mqStage==='mc')         { p.textContent='객관식'; p.className='qz-pill mock-pill'; }
+  else if(mqStage==='retry') { p.textContent='재시도'; p.className='qz-pill retry'; }
+  else                       { p.textContent='완료';   p.className='qz-pill done'; }
+}
+function mqBuildDots() {
+  const w = document.getElementById('mock-qz-dots'); w.innerHTML='';
+  mqQueue.forEach((_,i) => { const d=document.createElement('div'); d.className='qdot'; d.id=`mqdot-${i}`; w.appendChild(d); });
+}
+function mqUpdateDots() {
+  mqQueue.forEach((q,i) => {
+    const d = document.getElementById(`mqdot-${i}`); if(!d) return;
+    d.className='qdot'+(q._result==='correct'?' correct':q._result==='wrong'?' wrong':i===mqPos?' current':'');
+  });
+  document.getElementById('mock-qz-cur').textContent = Math.min(mqPos+1, mqQueue.length);
+  document.getElementById('mock-qz-tot').textContent = mqQueue.length;
+}
+
+function mqSwapCard(html, dir) {
+  return new Promise(res => {
+    const vp  = document.getElementById('mock-qz-viewport');
+    const old = mqCardEl;
+    const el  = document.createElement('div');
+    el.className = 'qz-card no-tr';
+    el.innerHTML = html;
+    if(dir!==0) el.style.transform=`translateX(${dir>0?'100%':'-100%'})`;
+    else el.style.opacity='0';
+    vp.appendChild(el); mqCardEl=el; mqAnim=true;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.classList.remove('no-tr');
+      el.style.transform='translateX(0)'; el.style.opacity='1';
+      if(old) {
+        old.classList.remove('no-tr');
+        old.style.transform=`translateX(${dir>0?'-100%':'100%'})`; old.style.opacity='0.3';
+        setTimeout(() => { old.remove(); mqAnim=false; res(); }, 360);
+      } else { setTimeout(() => { mqAnim=false; res(); }, 360); }
+    }));
+  });
+}
+async function mqRenderStage(html, dir=0) { await mqSwapCard(html, dir); }
+
+async function mqRenderQ(dir=1) {
+  mqAnswered = mqQueue[mqPos]._result !== null;
+  const q = mqQueue[mqPos];
+  const optsHTML = q._opts.map((opt,i) => {
+    const key = String.fromCharCode(65+i);
+    const cls = q._result
+      ? (opt===q.meaning ? (q._result==='correct'?'qz-opt correct disabled':'qz-opt show-answer disabled')
+          : opt===q._picked ? 'qz-opt wrong disabled' : 'qz-opt disabled')
+      : 'qz-opt';
+    const dataAttr = q._result ? '' : `data-opt="${esc(opt)}"`;
+    return `<button class="${cls}" type="button" ${dataAttr}><span class="qz-opt-key">${key}</span><span>${esc(opt)}</span></button>`;
+  }).join('');
+
+  const fb = q._result
+    ? (q._result==='correct'
+      ? `<div class="qz-fb correct show"><div class="qz-fb-title">✓ 정답!</div><div class="qz-fb-ans">${esc(q.word)} — ${esc(q.meaning)}</div></div>`
+      : `<div class="qz-fb wrong show"><div class="qz-fb-title">✗ 오답</div><div class="qz-fb-ans">정답: ${esc(q.meaning)}</div></div>`)
+    : '';
+  const hint = q._result
+    ? `<div class="qz-swipe-hint show">${mqPos<mqQueue.length-1?'← 스와이프해서 다음 문제':'← 스와이프해서 결과 보기'}</div>`
+    : '';
+
+  await mqRenderStage(`
+    <div class="qz-card-line mock"></div>
+    <button class="qz-tts qz-tts-corner" type="button" data-word="${esc(q.word)}">🔊</button>
+    <div class="qz-content">
+      <div class="qz-badges"><span class="qz-badge qz-badge-num">${esc(q.day)}</span></div>
+      <div class="qz-prompt">
+        <div class="qz-prompt-lbl">English</div>
+        <div class="qz-prompt-word">${esc(q.word)}</div>
+      </div>
+      <div class="qz-options">${optsHTML}</div>
+      ${fb}
+    </div>${hint}`, dir);
+
+  if(mqCardEl) {
+    if(document.activeElement && typeof document.activeElement.blur==='function') document.activeElement.blur();
+    mqCardEl.querySelectorAll('.qz-opt[data-opt]').forEach(btn => {
+      btn.addEventListener('click', () => mqAnswer(btn, btn.dataset.opt));
+    });
+    const ttsCorner = mqCardEl.querySelector('.qz-tts-corner');
+    if(ttsCorner) ttsCorner.addEventListener('click', e => { e.stopPropagation(); ttsPlay(ttsCorner.dataset.word, ttsCorner); });
+  }
+  mqUpdateDots();
+  if(!q._result) {
+    setTimeout(() => {
+      const btn = mqCardEl ? mqCardEl.querySelector('.qz-tts-corner') : null;
+      ttsAutoPlay(q.word, btn);
+    }, 250);
+  }
+}
+
+function mqAnswer(btn, chosen) {
+  const q = mqQueue[mqPos]; if(q._result) return;
+  const isOk = chosen === q.meaning;
+  q._picked=chosen; q._result=isOk?'correct':'wrong';
+  qzHaptic(isOk?8:15);
+  if(!isOk) mqWrong.push(q);
+  mqAnswered = true;
+  document.querySelectorAll('#mock-qz-viewport .qz-opt').forEach(b => {
+    b.classList.add('disabled'); b.onclick=null;
+    const txt = b.querySelector('span:last-child').textContent;
+    if(txt===q.meaning)  { b.classList.add(isOk?'correct':'show-answer'); }
+    else if(b===btn&&!isOk) { b.classList.add('wrong'); }
+  });
+  const fb = isOk
+    ? `<div class="qz-fb correct show"><div class="qz-fb-title">✓ 정답!</div><div class="qz-fb-ans">${esc(q.word)} — ${esc(q.meaning)}</div></div>`
+    : `<div class="qz-fb wrong show"><div class="qz-fb-title">✗ 오답</div><div class="qz-fb-ans">정답: ${esc(q.meaning)}</div></div>`;
+  mqCardEl.querySelector('.qz-content').insertAdjacentHTML('beforeend', fb);
+  const hint = document.createElement('div');
+  hint.className='qz-swipe-hint show';
+  hint.textContent = mqPos<mqQueue.length-1 ? '← 스와이프해서 다음 문제' : '← 스와이프해서 결과 보기';
+  mqCardEl.appendChild(hint);
+  mqUpdateDots();
+}
+
+function mqGoNext() {
+  mqPos++;
+  if(mqPos < mqQueue.length) { mqRenderQ(1); return; }
+  if(mqStage==='mc' && mqWrong.length>0) { mqRetryIntro(); }
+  else if(mqStage==='retry') {
+    const still = mqQueue.filter(q => q._result==='wrong');
+    if(still.length>0) {
+      mqQueue = still.map(w => ({...w, _opts:qzBuildOpts(w, mockTabWords.length?mockTabWords:mockWords), _result:null, _picked:null}));
+      mqPos=0; mqBuildDots(); mqRenderQ(1);
+    } else { mqRenderResult(); }
+  } else { mqRenderResult(); }
+}
+function mqGoPrev() { if(mqPos>0) { mqPos--; mqRenderQ(-1); } }
+
+function mqRetryIntro() {
+  mqStage='retry'; mqUpdatePill();
+  mqRenderStage(`
+    <div class="qz-card-line retry"></div>
+    <div class="qz-stage">
+      <div class="qz-stage-emoji">🔄</div>
+      <div class="qz-stage-lbl retry">재시도</div>
+      <div class="qz-stage-ttl">1차 완료!</div>
+      <div class="qz-stage-stats">
+        <div class="qz-stat"><div class="qz-stat-num c">${mqQueue.length-mqWrong.length}</div><div class="qz-stat-lbl">맞음</div></div>
+        <div class="qz-stat"><div class="qz-stat-num w">${mqWrong.length}</div><div class="qz-stat-lbl">틀림</div></div>
+      </div>
+      <div class="qz-stage-sub">틀린 ${mqWrong.length}문제를 다시 풀어볼게요.<br>다 맞히면 결과 화면으로 넘어가요.</div>
+      <button class="qz-start-btn retry" onclick="mqStartRetry()">다시 풀기 →</button>
+    </div>`,1);
+}
+function mqStartRetry() {
+  const pool = mockTabWords.length ? mockTabWords : mockWords;
+  mqQueue = mqWrong.map(w => ({...w, _opts:qzBuildOpts(w, pool), _result:null, _picked:null}));
+  mqPos=0; mqBuildDots(); mqRenderQ(1);
+}
+
+function mqRenderResult() {
+  mqStage='result'; mqUpdatePill();
+  document.getElementById('mock-qz-dots').innerHTML='';
+  document.getElementById('mock-qz-cur').textContent='✓';
+  const allTotal   = mqOriginalTotal;
+  const stillWrong = mqWrong.filter(w => w._result==='wrong').length;
+  const correct    = allTotal - stillWrong;
+  const pct        = Math.round(correct / allTotal * 100);
+  const col = pct>=80?'#1a9e6f':pct>=60?'#e3502d':'#d94040';
+  const deg = Math.round((pct/100)*360);
+  const wrongHTML = stillWrong===0
+    ? `<div class="qz-perfect">🏆 모든 문제를 맞혔어요!</div>`
+    : `<div><div class="qz-wrong-ttl">📌 다시 봐야 할 단어 (${stillWrong}개)</div>
+      ${mqWrong.filter(w=>w._result==='wrong').map(w=>`
+        <div class="qz-wrong-item">
+          <div class="qz-wrong-r1"><span class="qz-wrong-word">${esc(w.word)}</span><span class="qz-wrong-meaning">${esc(w.meaning)}</span></div>
+          <div class="qz-wrong-detail">'${esc(w._picked)}' 선택</div>
+        </div>`).join('')}</div>`;
+  mqRenderStage(`
+    <div class="qz-card-line mock"></div>
+    <div class="qz-result">
+      <div class="qz-score-circle" style="background:conic-gradient(${col} 0deg ${deg}deg,#e2dcd8 ${deg}deg 360deg)">
+        <div class="qz-score-inner"><div class="qz-score-num">${pct}<span style="font-size:1.1rem">%</span></div><div class="qz-score-tot">${correct}/${allTotal}</div></div>
+      </div>
+      <div class="qz-result-ttl">수고했어요! 🎉</div>
+      <div class="qz-result-sub">정답률 ${pct}%</div>
+      ${wrongHTML}
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+        <button class="qz-submit-btn mock-submit" id="mock-qz-submit-btn" onclick="submitMockResult(${correct}, ${allTotal})">
+          📤 선생님께 제출하기
+        </button>
+        <button class="qz-start-btn mock-start" style="width:100%" onclick="startMockQuiz()">↻ 다시 풀기</button>
+      </div>
+    </div>`,1);
+}
+
+async function submitMockResult(correct, total) {
+  const btn = document.getElementById('mock-qz-submit-btn');
+  if(!btn || btn.classList.contains('submitted')) return;
+  btn.disabled = true;
+  btn.innerHTML = '⏳ 제출 중...';
+  const elapsed = mqStartTime ? fmtElapsed(Date.now() - mqStartTime) : '-';
+  const payload = { student: STUDENT_NAME, day: mockQzConfig.day, correct, total, elapsed, type: '모의고사' };
+  try {
+    const res = await fetch(SUBMIT_URL + '?token=' + encodeURIComponent(API_TOKEN), {
+      method:'POST', body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    if(json.ok) {
+      btn.classList.add('submitted');
+      btn.innerHTML = '✅ 제출 완료!';
+      if(currentMockQuiz) {
+        markLocalSubmitted(currentMockQuiz.dateStr, currentMockQuiz.day);
+        mockQuizList = mockQuizList.filter(q => !(q.dateStr===currentMockQuiz.dateStr && q.day===currentMockQuiz.day));
+        renderMockQuizBanners();
+      }
+    } else { throw new Error(json.error || '오류'); }
+  } catch(err) {
+    btn.innerHTML = '⚠️ 제출 실패 — 다시 시도';
+    btn.disabled  = false;
+    setTimeout(() => { btn.classList.remove('submitted'); btn.innerHTML='📤 선생님께 제출하기'; }, 2000);
+  }
+}
+
+function mqInitSwipe() {
+  if(_mqSwipeInit) return; _mqSwipeInit=true;
+  const vp=document.getElementById('mock-qz-viewport');
+  let sX=0,sY=0,tracking=false,locked=null,pid=null;
+  function canNext(){return !mqAnim&&(mqStage==='mc'||mqStage==='retry')&&mqAnswered;}
+  function canPrev(){return !mqAnim&&(mqStage==='mc'||mqStage==='retry')&&mqPos>0;}
+  function start(x,y){tracking=true;locked=null;sX=x;sY=y;if(mqCardEl)mqCardEl.classList.add('dragging');}
+  function move(x,y,ev){
+    if(!tracking)return;
+    const dx=x-sX,dy=y-sY;
+    if(locked===null&&(Math.abs(dx)>8||Math.abs(dy)>8))locked=Math.abs(dx)>Math.abs(dy)?'h':'v';
+    if(locked==='h'){
+      if(ev&&ev.cancelable)ev.preventDefault();
+      if(!mqCardEl)return;
+      const block=(dx<0&&!canNext())||(dx>0&&!canPrev());
+      mqCardEl.style.transform=`translateX(${dx*(block?.15:.55)}px)`;
+      const t=Math.min(Math.abs(dx)/70,1);
+      document.getElementById('mock-qz-ind-prev').style.opacity=dx>8&&canPrev()?String(t*.9):'0';
+      document.getElementById('mock-qz-ind-next').style.opacity=dx<-8&&canNext()?String(t*.9):'0';
+    }
+  }
+  function end(ex){
+    if(!tracking){tracking=false;return;}tracking=false;
+    document.getElementById('mock-qz-ind-prev').style.opacity='0';
+    document.getElementById('mock-qz-ind-next').style.opacity='0';
+    if(mqCardEl)mqCardEl.classList.remove('dragging');
+    const dx=ex-sX;
+    if(locked==='h'&&Math.abs(dx)>40){
+      if(dx<0&&canNext()){if(mqCardEl)mqCardEl.style.transform='';mqGoNext();}
+      else if(dx>0&&canPrev()){if(mqCardEl)mqCardEl.style.transform='';mqGoPrev();}
+      else{if(mqCardEl){mqCardEl.style.transition='transform .3s cubic-bezier(.175,.885,.32,1.275)';mqCardEl.style.transform='translateX(0)';setTimeout(()=>{if(mqCardEl)mqCardEl.style.transition='';},320);}}
+    } else {if(mqCardEl)mqCardEl.style.transform='';}
+    locked=null;
+  }
+  if(window.PointerEvent){
+    vp.addEventListener('pointerdown',e=>{if(pid!==null)return;pid=e.pointerId;start(e.clientX,e.clientY);},{capture:true});
+    vp.addEventListener('pointermove',e=>{if(e.pointerId!==pid)return;move(e.clientX,e.clientY,e);},{capture:true});
+    vp.addEventListener('pointerup',e=>{if(e.pointerId!==pid)return;pid=null;end(e.clientX);},{capture:true});
+    vp.addEventListener('pointercancel',e=>{if(e.pointerId!==pid)return;pid=null;if(mqCardEl)mqCardEl.style.transform='';locked=null;tracking=false;},{capture:true});
   } else {
     vp.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;start(e.touches[0].clientX,e.touches[0].clientY);},{passive:true,capture:true});
     vp.addEventListener('touchmove',e=>{if(!tracking||e.touches.length!==1)return;move(e.touches[0].clientX,e.touches[0].clientY,e);},{passive:false,capture:true});
