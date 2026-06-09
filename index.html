@@ -19,6 +19,8 @@
     --purple:#7036e3;
     --green-mock:#1a7a5e;
     --green-mock-soft:#2aab84;
+    --amber-weak:#d97706;
+    --amber-weak-soft:#f59e0b;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -86,6 +88,8 @@
   #quiz-banner-container:empty{margin-bottom:0;}
   #mock-banner-container{display:flex;flex-direction:column;gap:.8rem;}
   #mock-banner-container:empty{margin-bottom:0;}
+  #weak-banner-container{display:flex;flex-direction:column;gap:.8rem;margin-top:.8rem;}
+  #weak-banner-container:empty{margin-top:0;}
 
   /* 배너 영역과 단어장 영역 사이 구분선 */
   .study-divider{
@@ -341,11 +345,28 @@
   .quiz-banner.mock-banner.overdue .quiz-banner-label{color:#d94040;}
   .quiz-banner.mock-banner.overdue .quiz-banner-btn{background:#d94040;}
 
+  /* ── 추가 단어(취약 단어) 배너 — 앰버 ── */
+  .quiz-banner.weak-banner{border-color:rgba(217,119,6,.25);background:var(--card);box-shadow:0 2px 12px rgba(217,119,6,.08);}
+  .quiz-banner.weak-banner::before{background:var(--amber-weak);}
+  .quiz-banner.weak-banner .quiz-banner-label{color:var(--amber-weak);}
+  .quiz-banner.weak-banner .quiz-banner-btn{background:var(--amber-weak);}
+  .quiz-banner.weak-banner.overdue{border-color:rgba(217,64,64,.35);background:#fff5f5;}
+  .quiz-banner.weak-banner.overdue::before{background:#d94040;}
+  .quiz-banner.weak-banner.overdue .quiz-banner-label{color:#d94040;}
+  .quiz-banner.weak-banner.overdue .quiz-banner-btn{background:#d94040;}
+
   .qz-card-line.mock{background:linear-gradient(90deg,var(--green-mock) 0%,var(--green-mock-soft) 100%);}
   .qz-pill.mock-pill{background:#e6f7f3;color:var(--green-mock);border:1px solid #b3dfd4;}
   .qz-start-btn.mock-start{background:var(--green-mock);box-shadow:0 4px 16px rgba(26,122,94,.25);}
   .qz-submit-btn.mock-submit{background:var(--green-mock);box-shadow:0 4px 16px rgba(26,122,94,.25);}
   .qz-name.mock-name{color:var(--green-mock) !important;}
+
+  /* ── 추가 단어 퀴즈 오버레이 — 앰버 ── */
+  .qz-card-line.weak{background:linear-gradient(90deg,var(--amber-weak) 0%,var(--amber-weak-soft) 100%);}
+  .qz-pill.weak-pill{background:#fef3e6;color:var(--amber-weak);border:1px solid #fad9a8;}
+  .qz-start-btn.weak-start{background:var(--amber-weak);box-shadow:0 4px 16px rgba(217,119,6,.25);}
+  .qz-submit-btn.weak-submit{background:var(--amber-weak);box-shadow:0 4px 16px rgba(217,119,6,.25);}
+  .qz-name.weak-name{color:var(--amber-weak) !important;}
 
   @media(max-width:768px){
     .mock-day-grid{grid-template-columns:repeat(2,1fr) !important;gap:.55rem;}
@@ -572,9 +593,10 @@
     </div>
   </div>
 
-  <!-- 통합 시험 배너 영역 (단어장 + 모의고사) -->
+  <!-- 통합 시험 배너 영역 (단어장 + 모의고사 + 추가 단어) -->
   <div id="quiz-banner-container"></div>
   <div id="mock-banner-container"></div>
+  <div id="weak-banner-container"></div>
 
   <!-- 배너 ↔ 단어장 구분선 (배너가 있을 때만 표시) -->
   <div class="study-divider hidden" id="study-divider">
@@ -655,10 +677,22 @@
    VOCAB_CSV    : 단어장 시트 CSV URL (해당 학생의 학년·반에 맞는 gid)
    MOCK_CSV     : 모의고사 시트 CSV URL (해당 학생의 학년·학교에 맞는 gid)
    ─ 학년·학교별로 구글 시트 탭을 따로 만들고, 그 탭의 gid만 바꿔주세요
-   ─ 모의고사가 없는 학생이면 MOCK_CSV = '' 로 두면 자동 안내 메시지 표시 */
+   ─ 모의고사가 없는 학생이면 MOCK_CSV = '' 로 두면 자동 안내 메시지 표시
+   WEAK_CSV     : 추가 단어 시트 CSV URL
+                  시트 형식: 이름(세트명), 영단어, 뜻  (헤더 행 있어도 됨)
+                  - "이름" 열은 학생명이 아니라 시험 세트명
+                    (예: "장성훈_복습01", "수능특강", "최유연_복습01")
+                  - quiz_config 스케줄의 Day 열에 같은 세트명을 넣으면
+                    해당 학생에게 이 세트의 시험 배너가 자동 표시됨
+                  - 모의고사와 같은 스케줄 기반 동작 (밀린 시험·자동 숨김 등)
+                  - 빈 문자열 '' 이면 배너 표시 안 됨 */
 const STUDENT_NAME = '박수빈';
 const VOCAB_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=';
 const MOCK_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=222284112';
+const WEAK_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=1027447664';
+
+document.title = ' BAROG · ' + STUDENT_NAME ;
+
 
 /* ============================================================
    ★ 단어학습 탭 — 폴더 정의 (확장 가능!)
@@ -716,6 +750,7 @@ function switchTab(t) {
   if(t==='vocab') {
     if(!vocabLoaded)    loadVocab();
     if(!mockTabLoaded)  loadMockTab();
+    loadWeakQuizBanners();   // ★ 추가 단어 배너 (스케줄 기반, idempotent)
   }
 }
 
@@ -783,9 +818,11 @@ async function loadVocab() {
     if(!allWords.length) throw new Error('단어가 없습니다.');
     activeWords = allWords; // 기본 풀은 기존 단어장
     renderVocab(allWords);
+    _resolveVocabReady && _resolveVocabReady();   // ★ 단어장 로딩 완료 신호
     loadQuizConfig();
   } catch(e) {
     document.getElementById('vocab-content').innerHTML=`<div class="loading-box" style="color:#d94040">⚠️ ${e.message}</div>`;
+    _resolveVocabReady && _resolveVocabReady();   // ★ 실패해도 신호 (다른 await 가 무한 대기하지 않도록)
     updateStudyCount();
   }
 }
@@ -977,10 +1014,10 @@ const API_TOKEN = 'barog-2026-q7x9k2mZ';
 
 /* 스케줄 탭 형식 (헤더 행 1개 + 데이터):
    날짜,       학생,   Day,       문제수(선택)
-   2026-05-18, 조문정, Day 10,          ← 기존 단어장(VOCAB_CSV)에서 Day 10 출제
+   2026-05-18, 김철수, Day 10,          ← 기존 단어장(VOCAB_CSV)에서 Day 10 출제
    2026-05-18, 박영은, Day 07,    20    ← 기존 단어장 Day 07, 20문제만
-   2026-05-19, 조문정, 모의 1회,        ← 모의고사 시트(MOCK_CSV)에서 "모의 1회" 출제
-   2026-05-19, 조문정, 수능특강,        ← 모의고사 시트에서 "수능특강" 출제
+   2026-05-19, 김수진, 모의 1회,        ← 모의고사 시트(MOCK_CSV)에서 "모의 1회" 출제
+   2026-05-19, 김수진, 수능특강,        ← 모의고사 시트에서 "수능특강" 출제
    ─ Day명이 "Day 숫자" 패턴 → 기존 단어장(VOCAB_CSV) 사용
    ─ 그 외 이름 → 모의고사 시트(MOCK_CSV) 사용
    ─ 문제수 비워두면 → 해당 Day 전체 단어 수로 자동
@@ -1002,15 +1039,42 @@ let QUIZ_CONFIG = { day: null, count: null }; // count null = 전체
 let mockWords = [];      // [{ day, word, meaning, pos }]
 let mockLoaded = false;
 
-/* "Day 숫자" 패턴이 아닌 모든 이름 → 모의고사 시트 참조 */
-function isMockDay(dayVal) {
-  return dayVal && !/^Day\s*\d+$/i.test(dayVal.trim());
+/* ──────────────────────────────────────────────
+   ★ 데이터 준비 완료 신호용 Promise
+   - loadVocab() / loadMockWords() 가 끝날 때 resolve
+   - 다른 함수에서 await 해서 race condition 방지
+   ────────────────────────────────────────────── */
+let _resolveVocabReady, _resolveMockReady;
+const vocabDataReady = new Promise(r => { _resolveVocabReady = r; });
+const mockDataReady  = new Promise(r => { _resolveMockReady  = r; });
+
+/* ──────────────────────────────────────────────
+   ★ Day 출처 라우터 — vocab / weak / mock 중 어느 시트의 Day인지 판단
+   - 우선순위: 단어장(allWords) > 추가단어(weakWords) > 모의고사(mockWords)
+     · 같은 이름이 추가단어와 모의고사 양쪽에 있으면 추가단어 우선
+       (예: 시트를 모의고사 → 추가단어로 옮길 때 weak 가 win)
+   - 세 시트에 모두 없으면 패턴 추정 (Day 숫자 → vocab, 그 외 → mock)
+   ────────────────────────────────────────────── */
+function getDaySource(dayVal) {
+  if (!dayVal) return null;
+  const trimmed = dayVal.trim();
+  if (allWords   && allWords.some(w   => w.day === trimmed)) return 'vocab';
+  if (weakWords  && weakWords.some(w  => w.day === trimmed)) return 'weak';
+  if (mockWords  && mockWords.some(w  => w.day === trimmed)) return 'mock';
+  // fallback (데이터 미로딩 등): 기존 패턴 추정
+  return /^Day\s*\d+$/i.test(trimmed) ? 'vocab' : 'mock';
 }
+function isVocabDay(dayVal){ return getDaySource(dayVal) === 'vocab'; }
+function isMockDay(dayVal) { return getDaySource(dayVal) === 'mock'; }
+function isWeakDay(dayVal) { return getDaySource(dayVal) === 'weak'; }
 
 async function loadMockWords() {
   if(mockLoaded) return;
   mockLoaded = true;
-  if(!MOCK_CSV) return; // URL 미설정 시 건너뜀
+  if(!MOCK_CSV) {
+    _resolveMockReady && _resolveMockReady();   // ★ URL 없어도 신호 (대기 해제)
+    return;
+  }
   try {
     const res = await fetch(MOCK_CSV + '&t=' + Date.now());
     if(!res.ok) throw new Error('HTTP ' + res.status);
@@ -1029,7 +1093,157 @@ async function loadMockWords() {
     }).filter(w => w.day && w.word && w.meaning);
   } catch(e) {
     console.warn('모의고사 단어 로딩 실패:', e.message);
+  } finally {
+    _resolveMockReady && _resolveMockReady();   // ★ 성공/실패 무관 신호
   }
+}
+
+/* ============================================================
+   ★ 추가 단어 — WEAK_CSV 에서 로딩
+   형식: 이름(세트명), 영단어, 뜻
+   - "이름" 컬럼은 학생명이 아니라 시험 세트의 식별 이름
+     (예: "장성훈_복습01", "수능특강", "최유연_복습01")
+   - quiz_config(스케줄) 의 Day 열에 같은 세트명을 넣으면
+     해당 학생에게 이 세트의 시험 배너가 표시됨
+   ============================================================ */
+let weakWords  = [];      // [{ day(=세트명), word, meaning, pos }]
+let weakLoaded = false;
+let _resolveWeakReady;
+const weakDataReady = new Promise(r => { _resolveWeakReady = r; });
+
+async function loadWeakWords() {
+  if (weakLoaded) return;
+  weakLoaded = true;
+  if (!WEAK_CSV) {
+    _resolveWeakReady && _resolveWeakReady();
+    return;
+  }
+  try {
+    const res = await fetch(WEAK_CSV + '&t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const lines = text.trim().split('\n').map(l => l.replace(/\r$/, ''));
+    const firstCols = csvSplit(lines[0]);
+    const firstCell = (firstCols[0] || '').trim();
+    const looksLikeHeader = /^(이름|세트|세트명|단어장|name|set)/i.test(firstCell);
+    const startRow = looksLikeHeader ? 1 : 0;
+    weakWords = lines.slice(startRow).map(l => {
+      const v = csvSplit(l);
+      const setName = (v[0] || '').trim();   // 세트명 (학생명 아님)
+      const word    = (v[1] || '').trim();
+      const meaning = v.slice(2).join(',').trim();
+      // 퀴즈 엔진이 .day 필드로 단어를 묶기 때문에 세트명을 day 로 저장
+      return { day: setName, word, meaning, pos: '' };
+    }).filter(w => w.day && w.word && w.meaning);
+  } catch (e) {
+    console.warn('추가 단어 로딩 실패:', e.message);
+  } finally {
+    _resolveWeakReady && _resolveWeakReady();
+  }
+}
+
+/* ── 추가 단어 시험 배너 (스케줄 기반) ── */
+let weakQuizList   = [];
+let currentWeakQuiz = null;
+
+async function loadWeakQuizBanners() {
+  const container = document.getElementById('weak-banner-container');
+  if (!container) return;
+  container.innerHTML = '';
+  if (!WEAK_CSV) return;
+
+  if (!weakLoaded) loadWeakWords();
+  await weakDataReady;
+  if (!weakWords.length) return;   // 시트에 단어가 없으면 종료
+
+  const targetDates = [todayStr(), daysAgo(1), daysAgo(2), daysAgo(3), daysAgo(4), daysAgo(5), daysAgo(6)];
+  let scheduleRows = [];
+  try {
+    const res = await fetch(SCHEDULE_CSV + '&t=' + Date.now());
+    if (res.ok) {
+      const text = await res.text();
+      const lines = text.trim().split('\n').map(l => l.replace(/\r$/, ''));
+      const isDateLine = /\d{4}\s*[년\-./]/.test(lines[0]);
+      const startRow = isDateLine ? 0 : 1;
+      for (let i = startRow; i < lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.trim());
+        const dateStr = normScheduleDate(cols[0] || '');
+        if (!dateStr) continue;
+        if (!targetDates.includes(dateStr)) continue;
+        if ((cols[1] || '') !== STUDENT_NAME) continue;
+        const dayVal = (cols[2] || '');
+        if (!dayVal || !isWeakDay(dayVal)) continue;  // 추가단어 세트만
+        const cntRaw = parseInt(cols[3] || '');
+        const cntVal = isNaN(cntRaw) ? null : cntRaw;
+        scheduleRows.push({ dateStr, day: dayVal, count: cntVal });
+      }
+    }
+  } catch (e) {}
+
+  if (!scheduleRows.length) return;
+
+  const localMap   = getLocalSubmitted();
+  const serverList = await fetchServerSubmitted();
+  const isSubmitted = (dateStr, day) =>
+    localMap[`${dateStr}_${day}`] === true || serverList.includes(day);
+
+  const today = todayStr();
+  weakQuizList = scheduleRows
+    .filter(r => !isSubmitted(r.dateStr, r.day))
+    .map(r => ({ ...r, overdue: r.dateStr !== today }))
+    .sort((a, b) => {
+      if (a.dateStr === today && b.dateStr !== today) return -1;
+      if (b.dateStr === today && a.dateStr !== today) return  1;
+      return b.dateStr.localeCompare(a.dateStr);
+    });
+  renderWeakQuizBanners();
+}
+
+function renderWeakQuizBanners() {
+  const container = document.getElementById('weak-banner-container');
+  container.innerHTML = '';
+  weakQuizList.forEach((q, idx) => {
+    const banner = document.createElement('div');
+    banner.className = 'quiz-banner weak-banner' + (q.overdue ? ' overdue' : '');
+
+    const left = document.createElement('div');
+    left.className = 'quiz-banner-left';
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'quiz-banner-label';
+    if (q.overdue) {
+      labelEl.textContent = '밀린 추가 단어 ';
+      const tag = document.createElement('span');
+      tag.className = 'quiz-banner-overdue-tag';
+      tag.textContent = `${fmtMMDD(q.dateStr)} (${getDow(q.dateStr)})`;
+      labelEl.appendChild(tag);
+    } else {
+      labelEl.textContent = `오늘의 추가 단어 · ${fmtMMDD(q.dateStr)} (${getDow(q.dateStr)})`;
+    }
+
+    const dayEl = document.createElement('div');
+    dayEl.className = 'quiz-banner-day';
+    dayEl.textContent = q.day;
+
+    const subEl = document.createElement('div');
+    subEl.className = 'quiz-banner-sub';
+    subEl.textContent = q.count === null ? '객관식 · 전체 문제' : `객관식 · ${q.count}문제`;
+
+    left.appendChild(labelEl);
+    left.appendChild(dayEl);
+    left.appendChild(subEl);
+
+    const btnEl = document.createElement('button');
+    btnEl.className = 'quiz-banner-btn';
+    btnEl.type = 'button';
+    btnEl.textContent = q.overdue ? '지금 풀기 →' : '시작하기 →';
+    btnEl.addEventListener('click', () => startWeakQuizByIdx(idx));
+
+    banner.appendChild(left);
+    banner.appendChild(btnEl);
+    container.appendChild(banner);
+  });
+  updateStudyDivider();
 }
 
 /* 오늘 날짜를 YYYY-MM-DD 형식으로 반환 */
@@ -1114,6 +1328,17 @@ async function loadQuizConfig() {
   const container = document.getElementById('quiz-banner-container');
   container.innerHTML = '';
 
+  // ★ 분류 정확도를 위해 모의고사·추가단어 데이터도 로딩 완료까지 대기
+  //   (isMockDay / isWeakDay 가 시트 데이터를 참조하기 때문)
+  if (MOCK_CSV) {
+    if (!mockLoaded) loadMockWords();
+    await mockDataReady;
+  }
+  if (WEAK_CSV) {
+    if (!weakLoaded) loadWeakWords();
+    await weakDataReady;
+  }
+
   // 1. 스케줄 시트에서 7일치(오늘~6일 전) 학생 데이터 읽기
   const targetDates = [todayStr(), daysAgo(1), daysAgo(2), daysAgo(3), daysAgo(4), daysAgo(5), daysAgo(6)]; // 최근순
   let scheduleRows = [];
@@ -1135,7 +1360,8 @@ async function loadQuizConfig() {
         if((cols[1] || '') !== STUDENT_NAME) continue;
         const dayVal = cols[2] || '';
         if(!dayVal) continue;
-        if(isMockDay(dayVal)) continue; // ★ 모의고사 Day는 단어장 탭에서 제외 (모의고사 탭에서만 표시)
+        if(isMockDay(dayVal)) continue; // ★ 모의고사 Day는 단어장 탭에서 제외
+        if(isWeakDay(dayVal)) continue; // ★ 추가단어 Day도 단어장 탭에서 제외
         const cntRaw = parseInt(cols[3] || '');
         const cntVal = isNaN(cntRaw) ? null : cntRaw;
         scheduleRows.push({ dateStr, day: dayVal, count: cntVal });
@@ -1730,6 +1956,18 @@ let mockQzConfig    = { day: null, count: null };
 async function loadMockQuizBanners() {
   const container = document.getElementById('mock-banner-container');
   container.innerHTML = '';
+
+  // ★ 분류 정확도를 위해 단어장·추가단어 데이터도 로딩 완료까지 대기
+  //   (isMockDay 가 우선순위 체인에서 allWords / weakWords 를 참조하기 때문)
+  if (VOCAB_CSV) {
+    if (!vocabLoaded) loadVocab();
+    await vocabDataReady;
+  }
+  if (WEAK_CSV) {
+    if (!weakLoaded) loadWeakWords();
+    await weakDataReady;
+  }
+
   const targetDates = [todayStr(), daysAgo(1), daysAgo(2), daysAgo(3), daysAgo(4), daysAgo(5), daysAgo(6)];
   let scheduleRows = [];
   try {
@@ -1823,29 +2061,72 @@ let mqStage='intro', mqQueue=[], mqPos=0, mqAnswered=false, mqWrong=[], mqCardEl
 let mqOriginalTotal=0, mqStartTime=null;
 let _mqSwipeInit=false;
 
+/* ★ 퀴즈 모드 — 'mock' (모의고사) 또는 'weak' (추가 단어).
+   같은 엔진을 두 용도에 공유하기 위한 분기 플래그 */
+let mqMode = 'mock';
+
 function startMockQuizByIdx(idx) {
   currentMockQuiz = mockQuizList[idx];
   if(!currentMockQuiz) return;
+  mqMode = 'mock';                                  // ★ 모의고사 모드
   mockQzConfig = { day: currentMockQuiz.day, count: currentMockQuiz.count };
   startMockQuiz();
 }
 
+/* ★ 추가 단어 퀴즈 시작 — 스케줄 기반 (모의고사와 동일 구조) */
+function startWeakQuizByIdx(idx) {
+  currentWeakQuiz = weakQuizList[idx];
+  if (!currentWeakQuiz) return;
+  mqMode = 'weak';                                  // ★ 추가 단어 모드
+  // 엔진이 currentMockQuiz / mockQzConfig 를 참조하므로 합성값 주입
+  currentMockQuiz = currentWeakQuiz;
+  mockQzConfig    = { day: currentWeakQuiz.day, count: currentWeakQuiz.count };
+  startMockQuiz();
+}
+
 function startMockQuiz() {
-  const pool = mockTabWords.length ? mockTabWords : mockWords;
-  const dayWords = pool.filter(w => w.day === mockQzConfig.day);
+  /* ★ 풀(pool) — 모드별 분기 */
+  let pool, dayWords;
+  if (mqMode === 'weak') {
+    pool = weakWords;
+    dayWords = pool.filter(w => w.day === mockQzConfig.day);
+  } else {
+    pool = mockTabWords.length ? mockTabWords : mockWords;
+    dayWords = pool.filter(w => w.day === mockQzConfig.day);
+  }
   if(!dayWords.length) {
-    alert(`"${mockQzConfig.day}" 단어가 없어요.\n모의고사 시트(MOCK_CSV)에 해당 Day명이 있는지 확인해 주세요.`);
+    const src = mqMode === 'weak' ? '추가 단어 시트(WEAK_CSV)' : '모의고사 시트(MOCK_CSV)';
+    alert(`"${mockQzConfig.day}" 단어가 없어요.\n${src}에 해당 세트명이 있는지 확인해 주세요.`);
     return;
   }
   const count    = mockQzConfig.count === null ? dayWords.length : mockQzConfig.count;
   const selected = qzShuffle([...dayWords]).slice(0, count);
-  mqQueue   = selected.map(w => ({...w, _opts: qzBuildOpts(w, pool), _result: null, _picked: null}));
+  /* ★ weak 모드는 세트별 단어 수가 적을 수 있어 객관식 4지선다를 채우기 위해
+        모의고사·단어장 단어를 distractor(오답 보기) 풀로 함께 사용 */
+  const distractorPool = mqMode === 'weak'
+    ? [...weakWords, ...mockWords, ...allWords]
+    : pool;
+  mqQueue   = selected.map(w => ({...w, _opts: qzBuildOpts(w, distractorPool), _result: null, _picked: null}));
   mqPos=0; mqAnswered=false; mqWrong=[];
   mqStage='mc';
   mqOriginalTotal = selected.length;
   mqStartTime = Date.now();
-  document.getElementById('mock-qz-title').textContent = `${mockQzConfig.day} · 객관식`;
-  document.getElementById('mock-qz-overlay').style.display = 'flex';
+
+  /* ★ 헤더 표시 — 모드별 분기 */
+  const overlay = document.getElementById('mock-qz-overlay');
+  const nameEl  = overlay.querySelector('.qz-name');
+  const titleEl = document.getElementById('mock-qz-title');
+  if (mqMode === 'weak') {
+    nameEl.textContent  = '바로그영어 · 추가 단어';
+    nameEl.classList.remove('mock-name'); nameEl.classList.add('weak-name');
+    titleEl.textContent = `${mockQzConfig.day} · 객관식`;   // 세트명 표시
+  } else {
+    nameEl.textContent  = '바로그영어 · 모의고사';
+    nameEl.classList.remove('weak-name'); nameEl.classList.add('mock-name');
+    titleEl.textContent = `${mockQzConfig.day} · 객관식`;
+  }
+
+  overlay.style.display = 'flex';
   history.pushState({ mockQuiz: true }, '', location.href);
   mqUpdatePill();
   mqBuildDots();
@@ -1925,10 +2206,10 @@ async function mqRenderQ(dir=1) {
     : '';
 
   await mqRenderStage(`
-    <div class="qz-card-line mock"></div>
+    <div class="qz-card-line ${mqMode === 'weak' ? 'weak' : 'mock'}"></div>
     <button class="qz-tts qz-tts-corner" type="button" data-word="${esc(q.word)}">🔊</button>
     <div class="qz-content">
-      <div class="qz-badges"><span class="qz-badge qz-badge-num">${esc(q.day)}</span></div>
+      <div class="qz-badges"><span class="qz-badge qz-badge-num">${esc(mqMode === 'weak' ? '추가 단어' : q.day)}</span></div>
       <div class="qz-prompt">
         <div class="qz-prompt-lbl">English</div>
         <div class="qz-prompt-word">${esc(q.word)}</div>
@@ -1985,7 +2266,11 @@ function mqGoNext() {
   else if(mqStage==='retry') {
     const still = mqQueue.filter(q => q._result==='wrong');
     if(still.length>0) {
-      mqQueue = still.map(w => ({...w, _opts:qzBuildOpts(w, mockTabWords.length?mockTabWords:mockWords), _result:null, _picked:null}));
+      /* ★ 재시도 풀 — 모드별 분기 */
+      const retryPool = mqMode === 'weak'
+        ? [...weakWords, ...mockWords, ...allWords]
+        : (mockTabWords.length ? mockTabWords : mockWords);
+      mqQueue = still.map(w => ({...w, _opts:qzBuildOpts(w, retryPool), _result:null, _picked:null}));
       mqPos=0; mqBuildDots(); mqRenderQ(1);
     } else { mqRenderResult(); }
   } else { mqRenderResult(); }
@@ -2009,7 +2294,10 @@ function mqRetryIntro() {
     </div>`,1);
 }
 function mqStartRetry() {
-  const pool = mockTabWords.length ? mockTabWords : mockWords;
+  /* ★ 풀 — 모드별 분기 (weak 는 객관식 채우기 위해 보강) */
+  const pool = mqMode === 'weak'
+    ? [...weakWords, ...mockWords, ...allWords]
+    : (mockTabWords.length ? mockTabWords : mockWords);
   mqQueue = mqWrong.map(w => ({...w, _opts:qzBuildOpts(w, pool), _result:null, _picked:null}));
   mqPos=0; mqBuildDots(); mqRenderQ(1);
 }
@@ -2033,7 +2321,7 @@ function mqRenderResult() {
           <div class="qz-wrong-detail">'${esc(w._picked)}' 선택</div>
         </div>`).join('')}</div>`;
   mqRenderStage(`
-    <div class="qz-card-line mock"></div>
+    <div class="qz-card-line ${mqMode === 'weak' ? 'weak' : 'mock'}"></div>
     <div class="qz-result">
       <div class="qz-score-circle" style="background:conic-gradient(${col} 0deg ${deg}deg,#e2dcd8 ${deg}deg 360deg)">
         <div class="qz-score-inner"><div class="qz-score-num">${pct}<span style="font-size:1.1rem">%</span></div><div class="qz-score-tot">${correct}/${allTotal}</div></div>
@@ -2042,10 +2330,10 @@ function mqRenderResult() {
       <div class="qz-result-sub">정답률 ${pct}%</div>
       ${wrongHTML}
       <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
-        <button class="qz-submit-btn mock-submit" id="mock-qz-submit-btn" onclick="submitMockResult(${correct}, ${allTotal})">
+        <button class="qz-submit-btn ${mqMode === 'weak' ? 'weak-submit' : 'mock-submit'}" id="mock-qz-submit-btn" onclick="submitMockResult(${correct}, ${allTotal})">
           📤 선생님께 제출하기
         </button>
-        <button class="qz-start-btn mock-start" style="width:100%" onclick="startMockQuiz()">↻ 다시 풀기</button>
+        <button class="qz-start-btn ${mqMode === 'weak' ? 'weak-start' : 'mock-start'}" style="width:100%" onclick="startMockQuiz()">↻ 다시 풀기</button>
       </div>
     </div>`,1);
 }
@@ -2056,7 +2344,9 @@ async function submitMockResult(correct, total) {
   btn.disabled = true;
   btn.innerHTML = '⏳ 제출 중...';
   const elapsed = mqStartTime ? fmtElapsed(Date.now() - mqStartTime) : '-';
-  const payload = { student: STUDENT_NAME, day: mockQzConfig.day, correct, total, elapsed, type: '모의고사' };
+  /* ★ 모드별 제출 type 분기 */
+  const submitType = mqMode === 'weak' ? '추가단어' : '모의고사';
+  const payload = { student: STUDENT_NAME, day: mockQzConfig.day, correct, total, elapsed, type: submitType };
   try {
     const res = await fetch(SUBMIT_URL + '?token=' + encodeURIComponent(API_TOKEN), {
       method:'POST', body: JSON.stringify(payload)
@@ -2065,7 +2355,14 @@ async function submitMockResult(correct, total) {
     if(json.ok) {
       btn.classList.add('submitted');
       btn.innerHTML = '✅ 제출 완료!';
-      if(currentMockQuiz) {
+      if (mqMode === 'weak') {
+        /* ★ 추가 단어: 모의고사와 동일하게 스케줄 기반 처리 */
+        if (currentWeakQuiz) {
+          markLocalSubmitted(currentWeakQuiz.dateStr, currentWeakQuiz.day);
+          weakQuizList = weakQuizList.filter(q => !(q.dateStr===currentWeakQuiz.dateStr && q.day===currentWeakQuiz.day));
+          renderWeakQuizBanners();
+        }
+      } else if(currentMockQuiz) {
         markLocalSubmitted(currentMockQuiz.dateStr, currentMockQuiz.day);
         mockQuizList = mockQuizList.filter(q => !(q.dateStr===currentMockQuiz.dateStr && q.day===currentMockQuiz.day));
         renderMockQuizBanners();
@@ -2152,7 +2449,8 @@ function updateStudyDivider() {
   if(!divider) return;
   const hasBanner =
     document.querySelector('#quiz-banner-container .quiz-banner') ||
-    document.querySelector('#mock-banner-container .quiz-banner');
+    document.querySelector('#mock-banner-container .quiz-banner') ||
+    document.querySelector('#weak-banner-container .quiz-banner');
   divider.classList.toggle('hidden', !hasBanner);
 }
 
