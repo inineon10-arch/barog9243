@@ -507,8 +507,8 @@
   <div class="header-inner">
     <a href="#" class="logo">BAROG English</a>
     <nav class="nav">
-      <a onclick="switchTab('wrong')" id="nav-wrong" class="active">오답단어</a>
-      <a onclick="switchTab('vocab')" id="nav-vocab" class="vocab-nav">단어학습</a>
+      <a onclick="switchTab('wrong')" id="nav-wrong">오답단어</a>
+      <a onclick="switchTab('vocab')" id="nav-vocab" class="vocab-nav active">단어학습</a>
     </nav>
   </div>
 </header>
@@ -521,12 +521,12 @@
 </section>
 
 <div class="tab-bar">
-  <button class="tab-btn active"   id="tab-wrong" onclick="switchTab('wrong')">오답단어</button>
-  <button class="tab-btn vocab-tab" id="tab-vocab" onclick="switchTab('vocab')">단어학습</button>
+  <button class="tab-btn"             id="tab-wrong" onclick="switchTab('wrong')">오답단어</button>
+  <button class="tab-btn vocab-tab active" id="tab-vocab" onclick="switchTab('vocab')">단어학습</button>
 </div>
 
 <!-- ★ 오답단어 — wrong-words.html 실시간 연동 -->
-<main class="materials-section visible" id="section-wrong">
+<main class="materials-section" id="section-wrong">
   <div class="section-header">
     <h2 class="section-title">오답단어 <em></em></h2>
     <div class="section-count" id="count-wrong">시트 실시간 연동</div>
@@ -543,7 +543,7 @@
 </main>
 
 <!-- ★ 단어학습 — 단어장 + 모의고사 (+ 향후 폴더들) 통합 -->
-<main class="materials-section" id="section-vocab">
+<main class="materials-section visible" id="section-vocab">
   <div class="section-header">
     <h2 class="section-title vocab-title">단어 학습 <em></em></h2>
     <div class="section-count" id="count-study">불러오는 중...</div>
@@ -2568,6 +2568,9 @@ window.addEventListener('popstate', function(e) {
     try { fn && fn(); } catch(err) { console.warn(err); }
   }
 }, true); // capture 단계에서 먼저 실행
+
+/* ★ 페이지 진입 시 첫 화면이 '단어학습' 이므로 관련 데이터 로딩 트리거 */
+switchTab('vocab');
 </script>
 </body>
 </html>
