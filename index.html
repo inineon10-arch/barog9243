@@ -1,4 +1,27 @@
 <!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════════
+  BAROG English · 학습 자료실
+  현재 버전: v2.3  (2026-06-10)
+─────────────────────────────────────────────────────────────────
+  변경 이력:
+ v2.3.6 — 모르는 단어 별표시 버그 수정
+ v2.3.4 — 단어암기탭에 모르는 단어 별표시
+ v2.3.3 — daily test 에 모르는 단어 별표시
+ v2.3.3 — 오답단어에 모르는 단어 별표시
+ v2.3 — Daily Test 로딩 중 상태 표시
+  v2.2 — 모바일 탭 라벨 축약 (오답/Test/암기) + 시험 개수 뱃지
+  v2.1 — 첫 화면을 Daily Test 로 변경
+  v2.0 — 3-탭 구조 (오답확인 / Daily Test / 단어 암기)
+  v1.4 — 추가단어 시험 (스케줄 기반, 모의고사와 동일 메커니즘)
+  v1.3 — 추가단어 시험 (학생명 기반, deprecated)
+  v1.2 — isMockDay 데이터 기반 분기 (시트 출처로 판단)
+  v1.1 — 모의고사 시스템
+  v1.0 — 단어장 + 오답단어 시스템
+
+
+═══════════════════════════════════════════════════════════════════
+-->
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
@@ -291,6 +314,15 @@
   .vcard-tts{position:absolute;top:.5rem;right:.5rem;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(112,54,227,.08);color:var(--purple);cursor:pointer;font-size:.7rem;transition:all .15s;z-index:2;}
   .vcard-tts:hover{background:rgba(112,54,227,.18);transform:scale(1.08);}
   .vcard-tts:active{transform:scale(.92);}
+  /* ★ 별표 버튼 — 단어 카드 좌상단 (보라 라인 옆) */
+  .vcard{padding-left:2.2rem!important;}
+  .vcard-star{position:absolute;top:.45rem;left:.45rem;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:transparent;color:#c7c0b3;cursor:pointer;font-size:.95rem;line-height:1;transition:all .15s;z-index:3;border:none;padding:0;}
+  .vcard-star:hover{background:rgba(245,179,0,.12);color:#f5b300;transform:scale(1.1);}
+  .vcard-star:active{transform:scale(.88);}
+  .vcard-star.starred{color:#f5b300;background:#fff8d6;animation:vcardStarPop .32s cubic-bezier(.175,.885,.32,1.275);}
+  @keyframes vcardStarPop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+  .vcard.starred-card::before{background:#f5b300!important;transform:scaleY(1)!important;width:3px;}
+  .vcard.starred-card{border-color:rgba(245,179,0,.35);}
   .tts-playing{background:var(--purple) !important;color:#fff !important;animation:pulse .6s ease infinite alternate;}
   @keyframes pulse{from{opacity:.7}to{opacity:1}}
 
@@ -335,6 +367,14 @@
   .mcard-tts{position:absolute;top:.5rem;right:.5rem;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(26,122,94,.08);color:var(--green-mock);cursor:pointer;font-size:.7rem;transition:all .15s;z-index:2;}
   .mcard-tts:hover{background:rgba(26,122,94,.18);transform:scale(1.08);}
   .mcard-tts:active{transform:scale(.92);}
+  /* ★ 별표 버튼 — 모의고사 단어 카드 좌상단 */
+  .mcard{padding-left:2.2rem!important;}
+  .mcard-star{position:absolute;top:.45rem;left:.45rem;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:transparent;color:#c7c0b3;cursor:pointer;font-size:.95rem;line-height:1;transition:all .15s;z-index:3;border:none;padding:0;}
+  .mcard-star:hover{background:rgba(245,179,0,.12);color:#f5b300;transform:scale(1.1);}
+  .mcard-star:active{transform:scale(.88);}
+  .mcard-star.starred{color:#f5b300;background:#fff8d6;animation:vcardStarPop .32s cubic-bezier(.175,.885,.32,1.275);}
+  .mcard.starred-card::before{background:#f5b300!important;transform:scaleY(1)!important;width:3px;}
+  .mcard.starred-card{border-color:rgba(245,179,0,.35);}
 
   .quiz-banner.mock-banner{border-color:rgba(26,122,94,.25);background:var(--card);box-shadow:0 2px 12px rgba(26,122,94,.08);}
   .quiz-banner.mock-banner::before{background:var(--green-mock);}
@@ -450,6 +490,17 @@
   .folder-jump-chip-count{
     font-size:.62rem;font-weight:700;opacity:.7;margin-left:.1rem;
   }
+  /* ★ 별표 단어 진입 칩 — 우측에 자동 배치 */
+  .folder-jump-spacer{flex:1;}
+  .folder-jump-chip.starred-chip{
+    background:#fff8d6;color:#b88500;border-color:#ffe88a;
+  }
+  .folder-jump-chip.starred-chip:hover{
+    background:#fff3b0;border-color:#f5b300;
+  }
+  .folder-jump-chip.starred-chip .folder-jump-chip-count{
+    background:rgba(245,179,0,.18);padding:1px 6px;border-radius:10px;opacity:1;
+  }
 
   @media(max-width:480px){
     .folder-group-header{padding:.6rem .65rem;gap:.4rem;}
@@ -463,6 +514,22 @@
   /* 로딩 */
   .loading-box{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:4rem 2rem;color:var(--ink-mute);font-family:'Inter',sans-serif;font-size:.85rem;}
   .spinner{width:30px;height:30px;border:2.5px solid var(--line);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;}
+
+  /* ★ Daily Test 상태 박스 — 로딩 / 빈 상태 공용 */
+  .daily-status{
+    display:flex;flex-direction:column;align-items:center;gap:1.2rem;
+    padding:3.5rem 1.5rem;margin-top:1rem;
+    background:rgba(112,54,227,.03);border:1px dashed rgba(112,54,227,.18);
+    border-radius:14px;text-align:center;
+  }
+  .daily-status-text{
+    font-family:'Noto Serif KR',serif;font-size:1.05rem;font-weight:500;
+    color:var(--ink-soft);line-height:1.5;
+  }
+  .daily-status-sub{
+    margin-top:.4rem;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:400;
+    color:var(--ink-mute);letter-spacing:0;
+  }
   @keyframes spin{to{transform:rotate(360deg)}}
 
   .no-results{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--ink-mute);font-style:italic;}
@@ -472,10 +539,38 @@
   .footer-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;}
   .footer-text{font-family:'Inter',sans-serif;font-size:.85rem;color:var(--ink-mute);}
   .footer-text em{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--accent);}
+  /* ★ 앱 버전 — 푸터 우측에 차분히 표시 */
+  .footer-version{
+    font-family:'Inter',monospace,sans-serif;font-size:.7rem;font-weight:500;
+    color:var(--ink-mute);opacity:.55;letter-spacing:.04em;
+    padding:.25rem .55rem;border:1px solid var(--line);border-radius:.5rem;
+    background:rgba(0,0,0,.02);
+    user-select:none;
+  }
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   .hero > *,.section-header,.search-wrap{animation:fadeUp .8s ease both;}
   .material-card{animation:fadeUp .5s ease both;}
+
+  /* ★ 탭 라벨 — 화면 폭에 따라 전체/축약 표시 전환 */
+  .lbl-short{display:none;}
+
+  /* ★ Daily Test 제목 옆 시험 개수 뱃지 — 보라 필 */
+  .daily-count-badge{
+    display:inline-block;margin-left:.5rem;
+    font-family:'Inter',sans-serif;font-size:.45em;font-weight:600;
+    color:var(--purple);background:rgba(112,54,227,.12);
+    padding:.3em .7em;border-radius:1em;
+    vertical-align:.5em;letter-spacing:0;line-height:1;
+  }
+
+  @media(max-width:600px){
+    /* 좁은 화면에서는 축약 라벨로 교체 (PC: 오답확인 → 모바일: 오답) */
+    .lbl-full{display:none;}
+    .lbl-short{display:inline;}
+    /* 한 줄 유지 — 폭 부족 시 글자가 잘리더라도 줄바꿈은 안 함 */
+    .nav a, .tab-btn{white-space:nowrap;}
+  }
 
   @media(max-width:768px){
     .header-inner{padding:1rem 1.25rem;} .nav{gap:1.25rem;font-size:.85rem;}
@@ -507,8 +602,9 @@
   <div class="header-inner">
     <a href="#" class="logo">BAROG English</a>
     <nav class="nav">
-      <a onclick="switchTab('wrong')" id="nav-wrong">오답단어</a>
-      <a onclick="switchTab('vocab')" id="nav-vocab" class="vocab-nav active">단어학습</a>
+      <a onclick="switchTab('wrong')" id="nav-wrong"><span class="lbl-full">오답확인</span><span class="lbl-short">오답</span></a>
+      <a onclick="switchTab('daily')" id="nav-daily" class="vocab-nav active"><span class="lbl-full">Daily Test</span><span class="lbl-short">Test</span></a>
+      <a onclick="switchTab('study')" id="nav-study" class="vocab-nav"><span class="lbl-full">단어 암기</span><span class="lbl-short">암기</span></a>
     </nav>
   </div>
 </header>
@@ -521,14 +617,15 @@
 </section>
 
 <div class="tab-bar">
-  <button class="tab-btn"             id="tab-wrong" onclick="switchTab('wrong')">오답단어</button>
-  <button class="tab-btn vocab-tab active" id="tab-vocab" onclick="switchTab('vocab')">단어학습</button>
+  <button class="tab-btn"                  id="tab-wrong" onclick="switchTab('wrong')"><span class="lbl-full">오답확인</span><span class="lbl-short">오답</span></button>
+  <button class="tab-btn vocab-tab active" id="tab-daily" onclick="switchTab('daily')"><span class="lbl-full">Daily Test</span><span class="lbl-short">Test</span></button>
+  <button class="tab-btn vocab-tab"        id="tab-study" onclick="switchTab('study')"><span class="lbl-full">단어 암기</span><span class="lbl-short">암기</span></button>
 </div>
 
-<!-- ★ 오답단어 — wrong-words.html 실시간 연동 -->
+<!-- ★ 오답확인 — wrong-words.html 실시간 연동 -->
 <main class="materials-section" id="section-wrong">
   <div class="section-header">
-    <h2 class="section-title">오답단어 <em></em></h2>
+    <h2 class="section-title">오답확인 <em></em></h2>
     <div class="section-count" id="count-wrong">시트 실시간 연동</div>
   </div>
   <a href="wrong-words.html" class="wrong-entry-btn">
@@ -542,55 +639,11 @@
   </a>
 </main>
 
-<!-- ★ 단어학습 — 단어장 + 모의고사 (+ 향후 폴더들) 통합 -->
-<main class="materials-section visible" id="section-vocab">
+<!-- ★ Daily Test — 오늘/밀린 시험 배너만 표시 -->
+<main class="materials-section visible" id="section-daily">
   <div class="section-header">
-    <h2 class="section-title vocab-title">단어 학습 <em></em></h2>
-    <div class="section-count" id="count-study">불러오는 중...</div>
-  </div>
-
-  <!-- 단어장 퀴즈 풀스크린 -->
-  <div class="qz-overlay" id="qz-overlay" style="display:none">
-    <div class="qz-header">
-      <div class="qz-header-left">
-        <div class="qz-name">바로그영어 · 단어장</div>
-        <div class="qz-title" id="qz-title">객관식 퀴즈</div>
-      </div>
-      <div class="qz-header-right">
-        <span class="qz-pill" id="qz-pill">객관식</span>
-        <div class="qz-idx"><span id="qz-cur">0</span><span> / <span id="qz-tot">0</span></span></div>
-      </div>
-    </div>
-    <div class="qz-prog"><div class="qz-dots" id="qz-dots"></div></div>
-    <div class="qz-viewport" id="qz-viewport">
-      <div class="qz-ind qz-ind-prev" id="qz-ind-prev">← 이전</div>
-      <div class="qz-ind qz-ind-next" id="qz-ind-next">다음 →</div>
-    </div>
-    <div class="qz-close-bar">
-      <button class="qz-close-btn" onclick="closeQuiz()">✕ 퀴즈 닫기</button>
-    </div>
-  </div>
-
-  <!-- 모의고사 퀴즈 풀스크린 -->
-  <div class="qz-overlay" id="mock-qz-overlay" style="display:none">
-    <div class="qz-header">
-      <div class="qz-header-left">
-        <div class="qz-name mock-name">바로그영어 · 모의고사</div>
-        <div class="qz-title" id="mock-qz-title">객관식 퀴즈</div>
-      </div>
-      <div class="qz-header-right">
-        <span class="qz-pill mock-pill" id="mock-qz-pill">객관식</span>
-        <div class="qz-idx"><span id="mock-qz-cur">0</span><span> / <span id="mock-qz-tot">0</span></span></div>
-      </div>
-    </div>
-    <div class="qz-prog"><div class="qz-dots" id="mock-qz-dots"></div></div>
-    <div class="qz-viewport" id="mock-qz-viewport">
-      <div class="qz-ind qz-ind-prev" id="mock-qz-ind-prev">← 이전</div>
-      <div class="qz-ind qz-ind-next" id="mock-qz-ind-next">다음 →</div>
-    </div>
-    <div class="qz-close-bar">
-      <button class="qz-close-btn" onclick="closeMockQuiz()">✕ 퀴즈 닫기</button>
-    </div>
+    <h2 class="section-title vocab-title">Daily Test<span id="daily-count-badge" class="daily-count-badge" style="display:none"></span> <em></em></h2>
+    <div class="section-count" id="count-daily">오늘의 시험</div>
   </div>
 
   <!-- 통합 시험 배너 영역 (단어장 + 모의고사 + 추가 단어) -->
@@ -598,16 +651,50 @@
   <div id="mock-banner-container"></div>
   <div id="weak-banner-container"></div>
 
-  <!-- 배너 ↔ 단어장 구분선 (배너가 있을 때만 표시) -->
-  <div class="study-divider hidden" id="study-divider">
-    <div class="study-divider-line"></div>
-    <span class="study-divider-label">단어 학습</span>
-    <div class="study-divider-line"></div>
+  <!-- ★ 데이터 로딩 중 안내 (페이지 진입 시 기본 표시 — JS 가 끝나면 숨김) -->
+  <div id="daily-loading" class="daily-status">
+    <div class="spinner"></div>
+    <div class="daily-status-text">
+      오늘의 시험을 확인하고 있어요...
+      <div class="daily-status-sub">잠시만 기다려 주세요</div>
+    </div>
+  </div>
+
+  <!-- 풀 시험이 없을 때 안내 (로딩 완료 후에만 표시) -->
+  <div id="daily-empty" class="daily-status" style="display:none">
+    <span style="font-size:1.8rem">🎉</span>
+    <div class="daily-status-text">
+      오늘 풀어야 할 시험이 없어요.
+      <div class="daily-status-sub">단어 암기 탭에서 평소 학습을 이어가세요.</div>
+    </div>
+  </div>
+</main>
+
+<!-- ★ 단어 암기 — 단어장 + 모의고사 폴더 카드 -->
+<main class="materials-section" id="section-study">
+  <div class="section-header">
+    <h2 class="section-title vocab-title">단어 암기 <em></em></h2>
+    <div class="section-count" id="count-study">불러오는 중...</div>
   </div>
 
   <!-- ★ 폴더 바로가기 칩 (동적 생성) -->
   <div id="folder-jump-bar" class="folder-jump-bar" style="display:none">
     <span class="folder-jump-label">바로가기</span>
+  </div>
+
+  <!-- ★ 폴더 그룹 0: 별표 단어 (별표 단어가 1개라도 있을 때만 자동 표시 — 처음부터 펼친 상태) -->
+  <div class="folder-group" data-folder="starred" id="folder-group-starred" style="--fg-color:#b88500;--fg-rgb:245,179,0;display:none;">
+    <div class="folder-group-header" onclick="toggleFolderGroup('starred')">
+      <span class="folder-group-toggle">▼</span>
+      <span class="folder-group-icon">⭐</span>
+      <span class="folder-group-name">별표 단어</span>
+      <span class="folder-group-meta" id="starred-meta-inline" style="display:none">
+        <strong id="starred-total">0</strong>개 단어
+      </span>
+    </div>
+    <div class="folder-group-body">
+      <div id="starred-content"></div>
+    </div>
   </div>
 
   <!-- 폴더 그룹 1: 단어장 -->
@@ -663,9 +750,55 @@
   -->
 </main>
 
+<!-- ★ 퀴즈 풀스크린 오버레이 — 탭과 무관하게 떠야 하므로 섹션 밖에 배치 -->
+<!-- 단어장 퀴즈 -->
+<div class="qz-overlay" id="qz-overlay" style="display:none">
+  <div class="qz-header">
+    <div class="qz-header-left">
+      <div class="qz-name">바로그영어 · 단어장</div>
+      <div class="qz-title" id="qz-title">객관식 퀴즈</div>
+    </div>
+    <div class="qz-header-right">
+      <span class="qz-pill" id="qz-pill">객관식</span>
+      <div class="qz-idx"><span id="qz-cur">0</span><span> / <span id="qz-tot">0</span></span></div>
+    </div>
+  </div>
+  <div class="qz-prog"><div class="qz-dots" id="qz-dots"></div></div>
+  <div class="qz-viewport" id="qz-viewport">
+    <div class="qz-ind qz-ind-prev" id="qz-ind-prev">← 이전</div>
+    <div class="qz-ind qz-ind-next" id="qz-ind-next">다음 →</div>
+  </div>
+  <div class="qz-close-bar">
+    <button class="qz-close-btn" onclick="closeQuiz()">✕ 퀴즈 닫기</button>
+  </div>
+</div>
+
+<!-- 모의고사 / 추가 단어 퀴즈 -->
+<div class="qz-overlay" id="mock-qz-overlay" style="display:none">
+  <div class="qz-header">
+    <div class="qz-header-left">
+      <div class="qz-name mock-name">바로그영어 · 모의고사</div>
+      <div class="qz-title" id="mock-qz-title">객관식 퀴즈</div>
+    </div>
+    <div class="qz-header-right">
+      <span class="qz-pill mock-pill" id="mock-qz-pill">객관식</span>
+      <div class="qz-idx"><span id="mock-qz-cur">0</span><span> / <span id="mock-qz-tot">0</span></span></div>
+    </div>
+  </div>
+  <div class="qz-prog"><div class="qz-dots" id="mock-qz-dots"></div></div>
+  <div class="qz-viewport" id="mock-qz-viewport">
+    <div class="qz-ind qz-ind-prev" id="mock-qz-ind-prev">← 이전</div>
+    <div class="qz-ind qz-ind-next" id="mock-qz-ind-next">다음 →</div>
+  </div>
+  <div class="qz-close-bar">
+    <button class="qz-close-btn" onclick="closeMockQuiz()">✕ 퀴즈 닫기</button>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-text">Barog English · <em>Crafted with care for our students</em></div>
+    <div class="footer-version" id="footer-version" title="앱 버전"></div>
   </div>
 </footer>
 
@@ -686,12 +819,77 @@
                     해당 학생에게 이 세트의 시험 배너가 자동 표시됨
                   - 모의고사와 같은 스케줄 기반 동작 (밀린 시험·자동 숨김 등)
                   - 빈 문자열 '' 이면 배너 표시 안 됨 */
+/* ════════════════════════════════════════════════════════════
+   ★ 앱 버전 — 변경할 때 이 값만 바꾸면 푸터·콘솔이 같이 갱신됨
+   ════════════════════════════════════════════════════════════ */
+const APP_VERSION      = '2 · 3';
+const APP_VERSION_DATE = '6';
+
 const STUDENT_NAME = '박수빈';
-const VOCAB_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=';
+const VOCAB_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=1174135286';
 const MOCK_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=222284112';
 const WEAK_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwVyD25PYnOiPEOZhMGy2ZQpt8jQmG6DYM7mXB_2FaR2hCPDTk8kmqAUT4xiUSO-fHhT56N4symdII/pub?output=csv&gid=1027447664';
 
 document.title = ' BAROG · ' + STUDENT_NAME ;
+
+
+/* ============================================================
+   ★ 단어암기 탭 별표 단어 관리 (오답탭 별표와 완전 분리)
+   ────────────────────────────────────────────────────────────
+   - 키: starred_vocab_<학생명>   (오답탭은 starred_words_<학생명>)
+   - 값: { [word]: { word, meaning, day, source:'vocab', starredAt } }
+   - 단어암기 탭의 .vcard / .mcard 카드 좌상단 ⭐ 버튼으로 토글
+   - 상단 바로가기 칩 옆 ⭐별표 단어 칩으로 객관식 복습 시작
+   ============================================================ */
+const VOCAB_STARRED_KEY = 'starred_vocab_' + STUDENT_NAME;
+
+function getVocabStarred() {
+  try { return JSON.parse(localStorage.getItem(VOCAB_STARRED_KEY) || '{}'); }
+  catch { return {}; }
+}
+function setVocabStarredMap(obj) {
+  try { localStorage.setItem(VOCAB_STARRED_KEY, JSON.stringify(obj)); }
+  catch (e) { console.warn('단어암기 별표 저장 실패:', e); }
+}
+function isVocabStarred(word) { return Boolean(getVocabStarred()[word]); }
+function toggleVocabStar(word, meaning, day) {
+  const all = getVocabStarred();
+  if (all[word]) {
+    delete all[word];
+  } else {
+    all[word] = {
+      word: word,
+      meaning: meaning || '',
+      day: day || '',
+      source: 'vocab',
+      starredAt: Date.now()
+    };
+  }
+  setVocabStarredMap(all);
+  /* 같은 단어가 여러 카드에 있을 수 있으니 (예: 단어장+모의고사 중복) 화면 동기화 */
+  syncStarUIForWord(word, Boolean(all[word]));
+  /* 별표 영역 갱신 (그리드 재렌더 + 바로가기 칩 갱신) */
+  try { renderStarredWordsSection(); } catch(_) {}
+  return Boolean(all[word]);
+}
+function getVocabStarredCards() {
+  return Object.values(getVocabStarred())
+    .sort((a, b) => (b.starredAt || 0) - (a.starredAt || 0));
+}
+/* 같은 단어를 표시하는 모든 .vcard/.mcard 의 별표 UI 동기화 */
+function syncStarUIForWord(word, nowStarred) {
+  document.querySelectorAll('.vcard, .mcard').forEach(card => {
+    if (card.dataset.word === word) {
+      card.classList.toggle('starred-card', nowStarred);
+      const btn = card.querySelector('.vcard-star, .mcard-star');
+      if (btn) {
+        btn.classList.toggle('starred', nowStarred);
+        btn.textContent = nowStarred ? '★' : '☆';
+        btn.title = nowStarred ? '별표 해제' : '모르는 단어로 표시';
+      }
+    }
+  });
+}
 
 
 /* ============================================================
@@ -741,16 +939,67 @@ const STUDY_FOLDERS = [
    탭 전환
    ============================================================ */
 function switchTab(t) {
-  ['wrong','vocab'].forEach(id => {
+  ['wrong','daily','study'].forEach(id => {
     document.getElementById('section-'+id).classList.toggle('visible', id===t);
     document.getElementById('tab-'+id).classList.toggle('active', id===t);
     const n = document.getElementById('nav-'+id);
     if(n) n.classList.toggle('active', id===t);
   });
-  if(t==='vocab') {
+  /* Daily Test 와 단어 암기 둘 다 동일한 데이터 소스(단어장·모의고사·추가단어 시트)를
+     필요로 함. 함수들은 모두 idempotent 이므로 양쪽 탭에서 호출해도 중복 fetch 없음.
+     - loadVocab()         : VOCAB_CSV → allWords + 단어장 폴더 렌더 + loadQuizConfig()
+     - loadMockTab()       : MOCK_CSV  → mockWords + 모의고사 폴더 렌더 + loadMockQuizBanners()
+     - loadWeakQuizBanners(): WEAK_CSV + 스케줄 → 추가단어 배너 렌더
+  */
+  if(t==='daily' || t==='study') {
     if(!vocabLoaded)    loadVocab();
     if(!mockTabLoaded)  loadMockTab();
-    loadWeakQuizBanners();   // ★ 추가 단어 배너 (스케줄 기반, idempotent)
+    if(t==='daily') loadWeakQuizBanners();
+  }
+  /* ★ 단어암기 탭 진입 시 별표 영역 갱신 — 다른 곳에서 별표 토글됐을 수 있음 */
+  if(t==='study') {
+    try { renderStarredWordsSection(); } catch(_) {}
+  }
+}
+
+/* ★ 배너 로더 완료 추적 — Daily Test 의 "로딩 중 / 시험 있음 / 빈 상태" 전환용
+   각 배너 로더(loadQuizConfig, loadMockQuizBanners, loadWeakQuizBanners)가
+   끝나면 _markBannerLoadDone() 가 호출됨 (아래 IIFE 에서 래핑) */
+const _bannersLoadStatus = { quiz: false, mock: false, weak: false };
+function _markBannerLoadDone(key) {
+  _bannersLoadStatus[key] = true;
+  updateDailyEmptyState();
+}
+
+/* Daily Test 탭 상태 갱신 — 3-상태 분기
+   1) 배너가 1개 이상 → 배너 표시, 로딩/빈 상태 숨김, 뱃지에 개수
+   2) 로딩 미완료      → 로딩 박스 표시
+   3) 로딩 완료 + 0개  → "오늘 시험 없어요" 표시 */
+function updateDailyEmptyState() {
+  const banners = document.querySelectorAll(
+    '#quiz-banner-container .quiz-banner, #mock-banner-container .quiz-banner, #weak-banner-container .quiz-banner'
+  );
+  const count = banners.length;
+  const allLoaded = _bannersLoadStatus.quiz && _bannersLoadStatus.mock && _bannersLoadStatus.weak;
+  const empty   = document.getElementById('daily-empty');
+  const loading = document.getElementById('daily-loading');
+  const badge   = document.getElementById('daily-count-badge');
+
+  if (count > 0) {
+    /* 배너 있음 */
+    if (loading) loading.style.display = 'none';
+    if (empty)   empty.style.display   = 'none';
+    if (badge) { badge.textContent = count + '개'; badge.style.display = 'inline-block'; }
+  } else if (!allLoaded) {
+    /* 아직 로딩 중 */
+    if (loading) loading.style.display = '';
+    if (empty)   empty.style.display   = 'none';
+    if (badge) { badge.textContent = ''; badge.style.display = 'none'; }
+  } else {
+    /* 로딩 끝났는데 배너 0개 */
+    if (loading) loading.style.display = 'none';
+    if (empty)   empty.style.display   = '';
+    if (badge) { badge.textContent = ''; badge.style.display = 'none'; }
   }
 }
 
@@ -884,17 +1133,29 @@ function renderVocab(words) {
     groups[day].forEach(w => {
       const c = document.createElement('div');
       c.className='vcard';
-      c.innerHTML=`<div class="vcard-tts" title="발음 듣기">🔊</div>
+      /* ★ 별표 단어이면 시작부터 starred-card 클래스 부여 (왼쪽 라인 노란색) */
+      const _starred = isVocabStarred(w.word);
+      if (_starred) c.classList.add('starred-card');
+      c.dataset.word = w.word;
+      c.innerHTML=`<button type="button" class="vcard-star${_starred?' starred':''}" aria-label="별표" title="${_starred?'별표 해제':'모르는 단어로 표시'}">${_starred?'★':'☆'}</button>
+        <div class="vcard-tts" title="발음 듣기">🔊</div>
         <div class="vcard-en">${esc(w.word)}</div>
         <div class="vcard-ko">${esc(w.meaning)}</div>
         <div class="vcard-hint">탭해서 뜻 보기</div>`;
       c.addEventListener('click', (e) => {
         if(e.target.closest('.vcard-tts')) return; // TTS 버튼은 toggle 안 함
+        if(e.target.closest('.vcard-star')) return; // 별표 버튼도 toggle 안 함
         c.classList.toggle('open');
         if(c.classList.contains('open')) ttsPlay(w.word, c.querySelector('.vcard-tts'));
       });
       const ttsBtn = c.querySelector('.vcard-tts');
       ttsBtn.addEventListener('click', (e) => { e.stopPropagation(); ttsPlay(w.word, ttsBtn); });
+      /* ★ 별표 버튼 클릭 — 현재 단어 토글 (DOM 동기화는 syncStarUIForWord 가 자동 처리) */
+      const starBtn = c.querySelector('.vcard-star');
+      starBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleVocabStar(w.word, w.meaning, w.day);
+      });
       cardsWrap.appendChild(c);
     });
 
@@ -1243,7 +1504,7 @@ function renderWeakQuizBanners() {
     banner.appendChild(btnEl);
     container.appendChild(banner);
   });
-  updateStudyDivider();
+  updateStudyDivider(); updateDailyEmptyState();
 }
 
 /* 오늘 날짜를 YYYY-MM-DD 형식으로 반환 */
@@ -1447,7 +1708,7 @@ function renderQuizBanners() {
     banner.appendChild(btnEl);
     container.appendChild(banner);
   });
-  updateStudyDivider();
+  updateStudyDivider(); updateDailyEmptyState();
 }
 
 function startQuizByIdx(idx) {
@@ -1892,17 +2153,27 @@ function renderMockVocab(words) {
     groups[day].forEach(w => {
       const c = document.createElement('div');
       c.className = 'mcard';
-      c.innerHTML = `<div class="mcard-tts" title="발음 듣기">🔊</div>
+      const _starred = isVocabStarred(w.word);
+      if (_starred) c.classList.add('starred-card');
+      c.dataset.word = w.word;
+      c.innerHTML = `<button type="button" class="mcard-star${_starred?' starred':''}" aria-label="별표" title="${_starred?'별표 해제':'모르는 단어로 표시'}">${_starred?'★':'☆'}</button>
+        <div class="mcard-tts" title="발음 듣기">🔊</div>
         <div class="mcard-en">${esc(w.word)}</div>
         <div class="mcard-ko">${esc(w.meaning)}</div>
         <div class="mcard-hint">탭해서 뜻 보기</div>`;
       c.addEventListener('click', (e) => {
         if(e.target.closest('.mcard-tts')) return;
+        if(e.target.closest('.mcard-star')) return;
         c.classList.toggle('open');
         if(c.classList.contains('open')) ttsPlay(w.word, c.querySelector('.mcard-tts'));
       });
       const ttsBtn = c.querySelector('.mcard-tts');
       ttsBtn.addEventListener('click', (e) => { e.stopPropagation(); ttsPlay(w.word, ttsBtn); });
+      const starBtn = c.querySelector('.mcard-star');
+      starBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleVocabStar(w.word, w.meaning, w.day);
+      });
       cardsWrap.appendChild(c);
     });
 
@@ -2053,7 +2324,7 @@ function renderMockQuizBanners() {
     banner.appendChild(btnEl);
     container.appendChild(banner);
   });
-  updateStudyDivider();
+  updateStudyDivider(); updateDailyEmptyState();
 }
 
 /* ── 모의고사 퀴즈 엔진 ── */
@@ -2440,7 +2711,7 @@ function updateStudyCount() {
   if(st > 0) { total += st; any = true; }
   el.textContent = any ? `전체 ${total}개 단어` : '불러오는 중...';
   buildFolderJumpBar();
-  updateStudyDivider();
+  updateStudyDivider(); updateDailyEmptyState();
 }
 
 /* 배너가 하나라도 있으면 구분선 표시, 없으면 숨김 */
@@ -2509,7 +2780,8 @@ function scrollToFolder(folderId) {
   window.scrollTo({ top, behavior: 'smooth' });
 }
 
-/* 등록된 폴더 그룹들을 자동 탐색해서 칩 생성 (확장성) */
+/* 등록된 폴더 그룹들을 자동 탐색해서 칩 생성 (확장성)
+   - display:none 폴더 그룹은 스킵 (예: 별표 단어가 0개일 때) */
 function buildFolderJumpBar() {
   const bar = document.getElementById('folder-jump-bar');
   if(!bar) return;
@@ -2519,6 +2791,8 @@ function buildFolderJumpBar() {
   const groups = document.querySelectorAll('.folder-group');
   let any = false;
   groups.forEach(group => {
+    /* ★ 숨겨진 폴더 그룹(예: 별표 0개)은 칩도 만들지 않음 */
+    if(group.style.display === 'none') return;
     const id   = group.dataset.folder;
     const name = group.querySelector('.folder-group-name')?.textContent || id;
     const icon = group.querySelector('.folder-group-icon')?.textContent || '📁';
@@ -2534,6 +2808,75 @@ function buildFolderJumpBar() {
     if(count > 0) any = true;
   });
   bar.style.display = any ? 'flex' : 'none';
+}
+
+/* ============================================================
+   ★ 별표 단어 영역 렌더링 — 단어암기 탭의 별표 폴더 그룹 채우기
+   ────────────────────────────────────────────────────────────
+   - 별표 단어가 1개라도 있으면: 폴더 그룹 표시 + vcard 그리드 렌더
+   - 별표 0개면: 폴더 그룹 전체 숨김
+   - 별표 토글, 페이지 진입, 탭 전환 시점에 호출됨
+   - 단어장 카드와 동일한 .vcard 컴포넌트 재사용 → 동일한 학습 경험
+   ============================================================ */
+function renderStarredWordsSection() {
+  const group = document.getElementById('folder-group-starred');
+  if (!group) return;
+
+  const starred = getVocabStarredCards();
+  const totalEl = document.getElementById('starred-total');
+  const metaEl  = document.getElementById('starred-meta-inline');
+  const content = document.getElementById('starred-content');
+
+  if (starred.length === 0) {
+    /* 별표 0개 → 폴더 그룹 전체 숨김 + 바로가기 칩도 자동 사라짐 */
+    group.style.display = 'none';
+    if(totalEl) totalEl.textContent = '0';
+    if(content) content.innerHTML = '';
+    buildFolderJumpBar();
+    return;
+  }
+
+  /* 별표 1개 이상 → 폴더 그룹 표시 */
+  group.style.display = '';
+  if(totalEl) totalEl.textContent = starred.length;
+  if(metaEl)  metaEl.style.display = '';
+
+  /* vcard 그리드 렌더 — 단어장과 같은 .vocab-cards 클래스 재사용 */
+  if(!content) return;
+  content.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'vocab-cards';
+  grid.style.marginTop = '.4rem';
+
+  starred.forEach(s => {
+    const c = document.createElement('div');
+    c.className = 'vcard starred-card';
+    c.dataset.word = s.word;
+    c.innerHTML = `<button type="button" class="vcard-star starred" aria-label="별표" title="별표 해제">★</button>
+      <div class="vcard-tts" title="발음 듣기">🔊</div>
+      <div class="vcard-en">${esc(s.word)}</div>
+      <div class="vcard-ko">${esc(s.meaning || '')}</div>
+      <div class="vcard-hint">탭해서 뜻 보기</div>`;
+    c.addEventListener('click', (e) => {
+      if(e.target.closest('.vcard-tts')) return;
+      if(e.target.closest('.vcard-star')) return;
+      c.classList.toggle('open');
+      if(c.classList.contains('open')) ttsPlay(s.word, c.querySelector('.vcard-tts'));
+    });
+    const ttsBtn = c.querySelector('.vcard-tts');
+    ttsBtn.addEventListener('click', (e) => { e.stopPropagation(); ttsPlay(s.word, ttsBtn); });
+    /* ★ 별표 해제 — 클릭하면 별표 목록에서 제거되고 영역 자동 갱신 */
+    const starBtn = c.querySelector('.vcard-star');
+    starBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleVocabStar(s.word, s.meaning, s.day);
+    });
+    grid.appendChild(c);
+  });
+  content.appendChild(grid);
+
+  /* 바로가기 칩 갱신 (buildFolderJumpBar 가 폴더 그룹 자동 스캔 → 별표 칩 자동 추가) */
+  buildFolderJumpBar();
 }
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -2569,8 +2912,40 @@ window.addEventListener('popstate', function(e) {
   }
 }, true); // capture 단계에서 먼저 실행
 
-/* ★ 페이지 진입 시 첫 화면이 '단어학습' 이므로 관련 데이터 로딩 트리거 */
-switchTab('vocab');
+/* ★ 배너 로더 3개를 try/finally 로 래핑 — early return / 에러 어떤 경로로 끝나도
+   _markBannerLoadDone() 가 보장 호출되도록. 이 IIFE 는 switchTab('daily') 직전에
+   실행되어야 함 (래핑 이후의 함수 참조에서만 효과가 있으므로) */
+(function() {
+  const orig = {
+    quiz: loadQuizConfig,
+    mock: loadMockQuizBanners,
+    weak: loadWeakQuizBanners
+  };
+  loadQuizConfig = async function() {
+    try { return await orig.quiz.apply(this, arguments); }
+    finally { _markBannerLoadDone('quiz'); }
+  };
+  loadMockQuizBanners = async function() {
+    try { return await orig.mock.apply(this, arguments); }
+    finally { _markBannerLoadDone('mock'); }
+  };
+  loadWeakQuizBanners = async function() {
+    try { return await orig.weak.apply(this, arguments); }
+    finally { _markBannerLoadDone('weak'); }
+  };
+})();
+
+/* ★ 푸터에 버전 표시 + 콘솔 로그 (배포 확인용) */
+(function() {
+  const el = document.getElementById('footer-version');
+  if (el) el.textContent = APP_VERSION + ' · ' + APP_VERSION_DATE;
+  console.log('%cBarog English ' + APP_VERSION,
+    'color:#7036e3;font-weight:600;font-size:13px',
+    '· ' + APP_VERSION_DATE);
+})();
+
+/* ★ 페이지 진입 시 첫 화면이 'Daily Test' 이므로 관련 데이터 로딩 트리거 */
+switchTab('daily');
 </script>
 </body>
 </html>
